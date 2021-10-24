@@ -2,7 +2,7 @@
 
 ### STEP TO STEP to run code on the first time
 
-Step 1: `git clone` <br/>
+Step 1: `git clone https://github.com/tcthinhsqt/old-question-answering.git` <br/>
 Step 2: `git fetch` <br/>
 Step 3: `git check out old_app` <br/>
 Step 4: `git pull` <br/>
