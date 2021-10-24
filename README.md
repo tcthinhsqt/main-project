@@ -4,7 +4,7 @@
 
 Step 1: `git clone https://github.com/tcthinhsqt/old-question-answering.git` <br/>
 Step 2: `git fetch` <br/>
-Step 3: `git check out old_app` <br/>
+Step 3: `git checkout old_app` <br/>
 Step 4: `git pull` <br/>
 Step 5: `sh init.sh` <br/>
 Step 6: `sh run.sh` <br/>
