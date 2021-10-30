@@ -1,5 +1,6 @@
-# old-question-answering
+# question-answering
 
+## OLD APP
 ### STEP TO STEP to run code on the first time
 
 Step 1: `git clone https://github.com/tcthinhsqt/old-question-answering.git` <br/>
