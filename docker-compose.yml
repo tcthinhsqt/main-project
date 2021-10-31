@@ -6,11 +6,14 @@ services:
     build:
       context: .
       dockerfile: docker/python/Dockerfile
-    command: "python main.py"
+    command:
+      - "python main.py"
+      - "cd ui && npm run serve"
     volumes:
       - ./server:/srv
     ports:
       - 8000:5000
+      - 8001:8080
     depends_on:
       - db
     networks:

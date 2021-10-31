@@ -76,4 +76,3 @@ Flask-Migrate==2.5.3
 Flask-Script==2.0.6
 Flask-Cors==3.0.9
 mysqlclient==2.0.1
-Flask-Validator==1.4.2
