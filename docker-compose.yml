@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: docker/python/Dockerfile
-    command: bash -c "cd ui && npm run serve"
+    command: bash -c "cd ui && npm install && npm update && npm run serve"
     volumes:
       - ./server:/srv
     ports:
