@@ -14,5 +14,6 @@ RUN npm install -g n
 RUN npm install -g @vue/cli
 RUN n stable
 
-CMD python main.py
-#CMD python main.py runserver 0.0.0.0:8000
+COPY runner.sh /scripts/runner.sh
+RUN ["chmod", "+x", "/scripts/runner.sh"]
+ENTRYPOINT ["/scripts/runner.sh"]
