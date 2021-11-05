@@ -1,0 +1,57 @@
+<template>
+  <div class="modal left fade" id="modalCreate" tabindex="5" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 id="myModalLabel">EVALUATE</h1>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true"><i class="bi bi-x-lg"></i></span></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label>Rating</label>
+              <select class="form-control form-select" aria-label="Default select example"
+                      id="select-domain">
+                <option v-for="item in ratingOption" :key="item" :selected="{selected: item === 1}">{{ item }}</option>
+              </select>
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="choose-back-half"
+                     v-model="isCustomizeBackHalf">
+              <label class="form-check-label" for="choose-back-half">Enter feedback</label>
+            </div>
+            <div class="form-group" v-show="isCustomizeBackHalf">
+              <textarea class="form-control" v-model="feedback"
+                        aria-placeholder="Enter feedback" resize="none" rows="6"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning" id="create">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ShortenURLFormCreate",
+  data() {
+    return {
+      isCustomizeBackHalf: false,
+      ratingOption: [1, 2, 3, 4, 5],
+      feedback: '',
+    }
+  }
+}
+</script>
+
+<style scoped>
+#create {
+  width: 100% !important;
+  height: 3rem !important;
+
+}
+</style>
