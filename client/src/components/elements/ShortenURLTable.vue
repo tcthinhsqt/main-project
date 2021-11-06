@@ -13,7 +13,7 @@
                     <button class="btn btn-outline-danger" data-toggle="modal" data-target="#modalUpdate">
                         <span class="d-none d-md-block">
                             <i class="bi bi-trash-fill"></i>
-                            Delete
+                            Xóa
                         </span>
                         <span class="d-md-none"><i class="bi bi-pencil-fill"></i></span>
                     </button>

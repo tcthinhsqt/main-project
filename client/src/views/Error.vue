@@ -4,10 +4,9 @@
             <div class="notfound-404">
                 <h1>404</h1>
             </div>
-            <h2>Oops! This Page Could Not Be Found</h2>
-            <p>Sorry but the page you are looking for does not exist, have been removed. name changed or is temporarily
-                unavailable</p>
-            <router-link :to="{ name:'home' }" tag="a">Go To Homepage</router-link>
+            <h2>Rất tiếc! Không thể tìm thấy trang này</h2>
+            <p>Xin lỗi nhưng trang bạn đang tìm kiếm không tồn tại, đã bị xóa. tên đã thay đổi hoặc tạm thời không có sẵn</p>
+            <router-link :to="{ name:'home' }" tag="a">Trở về trang chủ</router-link>
         </div>
     </div>
 </template>

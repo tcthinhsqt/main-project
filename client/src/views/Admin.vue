@@ -6,7 +6,7 @@
         <ShortenURLManagement/>
         <div class="card border-0 mb-0">
           <div class="card-header bg-transparent">
-            <h3 class="mb-0">Generate New Data</h3>
+            <h3 class="mb-0">Tạo bộ dữ liệu mới</h3>
           </div>
           <div class="card-body px-lg-5 py-lg-5">
             <ValidationObserver tag="form" @submit.prevent="" v-slot="{ invalid }">
@@ -21,14 +21,14 @@
                       <!--                      <span class="input-group-text"><i class="bi bi-file-earmark"></i></span>-->
                       <button @click.prevent="chooseFile" class="btn btn-primary" ref="files">
                         <i class="bi bi-file-earmark"></i>
-                        Choose a file
+                        Chọn file
                       </button>
 
                     </div>
                     <input id="display-name" type="text" class="form-control" v-model="filename" disabled>
                     <input id="files"
                            class="form-control"
-                           placeholder="Choose a file"
+                           placeholder="Chọn một file"
                            type="file"
                            :class="{'is-invalid': errors[0]}"
                            ref="files"
@@ -44,12 +44,12 @@
               <br/>
 
               <div class="input-group invalid-feedback" v-if="false">
-                error message
+                Thông báo lỗi
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-primary my-4" :disabled="invalid">
                   <i class="bi bi-box-arrow-right"></i>
-                  Generate
+                  Phát sinh dữ liệu mới
                 </button>
               </div>
               <ShortenURLLoading v-show="false"/>

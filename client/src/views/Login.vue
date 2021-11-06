@@ -6,12 +6,12 @@
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
             <div class="col-xl-5 col-lg-6 col-md-8 px-5">
-              <h1 class="text-white">Log in and start sharing</h1>
-              <p class="text-lead text-white">Login or create new account in your project for free.</p>
+              <h1 class="text-white">Đăng nhập để truy cập vào hệ thống</h1>
+              <p class="text-lead text-white">Đăng nhập hoặc tạo tài khoản hoàn toàn miễn phí.</p>
             </div>
           </div>
           <div class="mb--6 pt-5">
-            <router-link :to="{ name: 'home'}"><h1 class="back-home">◃BACK HOME</h1></router-link>
+            <router-link :to="{ name: 'home'}"><h1 class="back-home">◃TRỞ VỀ TRANG CHỦ</h1></router-link>
           </div>
         </div>
       </div>
@@ -28,7 +28,7 @@
         <div class="col-lg-5 col-md-7">
           <div class="card border-0 mb-0">
             <div class="card-header bg-transparent pb-5">
-              <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
+              <div class="text-muted text-center mt-2 mb-3"><small>Đăng nhập bằng tài khoản</small></div>
               <div class="btn-wrapper text-center">
                 <a href="#" class="btn btn-neutral btn-icon">
                   <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
@@ -38,7 +38,7 @@
             </div>
             <div class="card-body px-lg-5 py-lg-5">
               <div class="text-center text-muted mb-4">
-                <small>Or sign in with credentials</small>
+                <small>Hoặc đăng nhập bằng thông tin xác thực của chúng tôi</small>
               </div>
               <ValidationObserver tag="form" @submit.prevent="submitLogin" v-slot="{ invalid }">
                 <ValidationProvider vid="username" name="username" rules="required"
@@ -50,7 +50,7 @@
                                                         class="bi bi-person-fill"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Email Or Username"
+                             placeholder="Email hoặc MSSV, MGV"
                              type="text"
                              :class="{'is-invalid': errors[0]}"
                              v-model="credentials.username"
@@ -70,7 +70,7 @@
                         <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Password"
+                             placeholder="Mật khẩu của bạn"
                              type="password"
                              :class="{'is-invalid': errors[0]}"
                              v-model="credentials.password">
@@ -85,14 +85,14 @@
                   <input class="custom-control-input" id=" customCheckLogin" type="checkbox"
                          v-model="credentials.is_remember">
                   <label class="custom-control-label" for=" customCheckLogin">
-                    <span class="text-muted">Remember me</span>
+                    <span class="text-muted">Giữ trạng thái đăng nhập cho lần sau</span>
                   </label>
                 </div>
                 <div class="input-group invalid-feedback" v-if="false">
-                  error message
+                  Thông báo lỗi
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary my-4" :disabled="invalid">Sign in
+                  <button type="submit" class="btn btn-primary my-4" :disabled="invalid">Đăng nhập
                   </button>
                 </div>
                 <ShortenURLLoading v-show="false"/>
@@ -101,11 +101,11 @@
           </div>
           <div class="row mt-3">
             <div class="col-6">
-              <a href="#" class="text-light"><small>Forgot password?</small></a>
+              <a href="#" class="text-light"><small>Quên mật khẩu?</small></a>
             </div>
             <div class="col-6 text-right">
               <router-link :to="{ name: 'register' }">
-                <small>Create new account</small>
+                <small>Tạo tài khoản mới</small>
               </router-link>
             </div>
           </div>

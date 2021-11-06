@@ -6,12 +6,12 @@
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
             <div class="col-xl-5 col-lg-6 col-md-8 px-5">
-              <h1 class="text-white">Create an account</h1>
-              <p class="text-lead text-white">Login or create new account in your project for free.</p>
+              <h1 class="text-white">Đăng ký tài khoản</h1>
+              <p class="text-lead text-white">Tạo tài khoản đăng nhập hoàn toàn miễn phí.</p>
             </div>
           </div>
           <div class="mb--6 pt-5">
-            <router-link :to="{ name: 'home'}"><h1 class="back-home">◃BACK HOME</h1></router-link>
+            <router-link :to="{ name: 'home'}"><h1 class="back-home">◃TRỞ VỀ TRANG CHỦ</h1></router-link>
           </div>
         </div>
       </div>
@@ -28,7 +28,7 @@
         <div class="col-lg-6 col-md-8">
           <div class="card border-0 mb-0">
             <div class="card-header bg-transparent pb-5">
-              <div class="text-muted text-center mt-2 mb-4"><small>Sign in with</small></div>
+              <div class="text-muted text-center mt-2 mb-4"><small>Đăng nhập bằng tài khoản</small></div>
               <div class="btn-wrapper text-center">
                 <a href="#" class="btn btn-neutral btn-icon">
                   <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
@@ -38,7 +38,7 @@
             </div>
             <div class="card-body px-lg-5 py-lg-5">
               <div class="text-center text-muted mb-4">
-                <small>Or sign up with credentials</small>
+                <small>Hoặc đăng nhập bằng thông tin xác thực của chúng tôi</small>
               </div>
               <ValidationObserver ref="register" @submit.prevent="submitRegisterForm" tag="form"
                                   v-slot="{ invalid }">
@@ -50,7 +50,7 @@
                         <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Username"
+                             placeholder="Mã số sinh viên hoặc mã giảng viên"
                              type="text"
                              :class="{'is-invalid': errors[0]}"
                              v-model="userDataForm.username"
@@ -69,7 +69,7 @@
                                                     class="bi bi-envelope-fill"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Email"
+                             placeholder="Địa chỉ email"
                              type="email"
                              :class="{'is-invalid': errors[0]}"
                              v-model="userDataForm.email"
@@ -87,7 +87,7 @@
                         <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Password"
+                             placeholder="Mật khẩu"
                              type="password"
                              :class="{'is-invalid': errors[0]}"
                              v-model="userDataForm.password"
@@ -107,7 +107,7 @@
                         <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Verify password"
+                             placeholder="Nhập lại mật khẩu"
                              type="password"
                              :class="{'is-invalid': errors[0]}"
                              v-model="userDataForm.password_confirmation"
@@ -132,7 +132,7 @@
                             v-model="isAgree"
                         >
                         <label class="custom-control-label" for="customCheckRegister">
-                          <span class="text-muted">I agree with the <a href="#!">Privacy Policy</a></span>
+                          <span class="text-muted">Tôi đồng ý với <a href="#!">Điều khoản dịch vụ</a></span>
                         </label>
                       </div>
                     </div>
@@ -142,8 +142,8 @@
                   </div>
                 </ValidationProvider>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary mt-4" :disabled="invalid">Create
-                    account
+                  <button type="submit" class="btn btn-primary mt-4" :disabled="invalid">
+                      Tạo tài khoản
                   </button>
                 </div>
               </ValidationObserver>
@@ -153,9 +153,9 @@
           <div class="row mt-2">
             <div class="col-12 text-center">
               <p class="text-white">
-                <small>Already have an account?</small>
+                <small>Bạn đã có tài khoản?</small>
                 <router-link :to="{ name: 'login' }">
-                  <small> Login</small>
+                  <small>Đăng nhập</small>
                 </router-link>
               </p>
             </div>

@@ -3,7 +3,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 id="myModalLabel">Detail</h1>
+                    <h1 id="myModalLabel">Chi tiết</h1>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true"><i class="bi bi-x-lg"></i></span></button>
                 </div>
@@ -14,27 +14,27 @@
                     </a>
                     <div class="pt-2">
                         <button id="copyBtn" type="button" class="btn btn-primary btn-sm"><i
-                            class="bi bi-clipboard"></i> Copy
+                            class="bi bi-clipboard"></i> Sao chép
                         </button>
                         <button id="redirectBtn" type="button" class="btn btn-danger btn-sm"><i
-                            class="bi bi-box-arrow-in-right"></i> Go to
+                            class="bi bi-box-arrow-in-right"></i> Đi đến
                         </button>
                     </div>
                 </div>
                 <div class="modal-body">
                     <div>
-                        <h4>Total click: 456</h4>
+                        <h4>Tổng số lượt click: 456</h4>
                         <chartjs-bar :labels="dataTotalClick.labels" :datasets="dataTotalClick.datasets"></chartjs-bar>
                     </div>
                     <br>
                     <div>
-                        <h4>Location: </h4>
+                        <h4>Vị trí: </h4>
                         <chartjs-pie :labels="dataLocation.labels" :datasets="dataLocation.datasets"
                                      :option="dataLocation.options"></chartjs-pie>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" id="edit">Save</button>
+                    <button type="submit" class="btn btn-success" id="edit">Lưu</button>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@ export default {
             dataTotalClick     : {
                 labels  : labels,
                 datasets: [{
-                    label          : 'Date Created',
+                    label          : 'Ngày đánh giá',
                     data           : [65, 59, 80, 81, 56, 55, 40, 0, 0, 16],
                     backgroundColor: [
                         'rgba(153, 102, 255, 1)',

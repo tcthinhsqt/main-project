@@ -3,8 +3,8 @@
     <div class="container">
       <div class="row no-gutters">
         <div class="section-title" data-aos="fade-in" data-aos-delay="100">
-          <h2>Let's ask about something you want to know about IUH</h2>
-          <p>Easy to use - Easy to learn</p>
+          <h2>Hãy hỏi về những điều bạn muốn biết về IUH</h2>
+          <p>Nhanh chóng - Cập nhật thường xuyên - Đáp ứng đa dạng nhu cầu</p>
         </div>
         <div class="col-xl-12 d-flex align-items-stretch">
           <div class="col-lg-12 icon-box" data-aos="fade-up" data-aos-delay="100">
@@ -14,7 +14,7 @@
                 <div class="row justify-content-center">
                   <div class="col-md-8 form-group">
                     <input type="text" name="question" class="form-control" id="question"
-                           placeholder="Put your question here" v-model="question"
+                           placeholder="Nhập câu hỏi của bạn ở đây" v-model="question"
                            :class="{'is-invalid': errors[0]}"
                            @click.prevent="handleClickShortenInput"
                     >
@@ -26,7 +26,7 @@
               </ValidationProvider>
               <div class="text-center">
                 <button type="submit" class="btn-shorten" :disabled="isDisableShortenBtn || invalid">
-                  ASKING
+                  Đặt câu hỏi
                 </button>
               </div>
               <ShortenURLLoading v-show="false"/>
@@ -44,7 +44,7 @@
                     <div class="col-md-10">
                       <div class="form-group">
                         <textarea class="form-control" disabled="true" v-model="answer"></textarea>
-                        <span class="form-label">Your answer</span>
+                        <span class="form-label">Câu trả lời của bạn</span>
                       </div>
                     </div>
                     <div class="col-md-2 d-flex flex-column">
@@ -52,13 +52,13 @@
                         <button type="button" class="submit-btn"
                                 @click.prevent="copyToClipboard">
                           <i class="bi bi-clipboard"></i>
-                          Copy
+                          Sao chép
                         </button>
                       </div>
                       <div class="form-btn">
                         <button class="submit-btn" data-toggle="modal" data-target="#modalCreate">
                           <i class="bi bi-pencil-square"></i>
-                          Evaluate
+                          Đánh giá
                         </button>
                       </div>
                     </div>
@@ -91,9 +91,9 @@ export default {
   methods: {
     copyToClipboard() {
       navigator.clipboard.writeText(this.answer).then(function () {
-        alert('Copied');
+        alert('Sao chép thành công');
       }, function () {
-        alert('Cannot copy');
+        alert('Không thể sao chép');
       });
     },
     closeResult() {

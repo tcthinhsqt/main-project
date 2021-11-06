@@ -18,7 +18,7 @@
                 <p class="mt-3 mb-0 text-sm">
                     <span class="text-success mr-2"><span
                         v-html="statisticItem.statusIcon"></span> {{ statisticItem.status }}</span>
-                    <span class="text-nowrap">Since last month</span>
+                    <span class="text-nowrap">So với tháng trước</span>
                 </p>
             </div>
         </div>

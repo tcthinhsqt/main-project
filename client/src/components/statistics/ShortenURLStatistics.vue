@@ -25,7 +25,7 @@ export default {
       statisticList: [
         {
           id: 1,
-          name: "Total Use",
+          name: "Tổng số lượt sử dụng",
           statistic: "897",
           icon: "<i class=\"bi bi-calculator\"></i>",
           statusIcon: "<i class=\"bi bi-arrow-up\"></i>",
@@ -34,7 +34,7 @@ export default {
         },
         {
           id: 2,
-          name: "Rating",
+          name: "Xếp hạng",
           statistic: "4.5",
           icon: "<i class=\"bi bi-graph-up\"></i>",
           statusIcon: "<i class=\"bi bi-arrow-up\"></i>",
@@ -43,8 +43,8 @@ export default {
         },
       ],
       breadcrumbs: [
-        {routeName: 'home', pageName: 'Home'},
-        {routeName: 'information', pageName: 'Information'},
+        {routeName: 'home', pageName: 'Trang chủ'},
+        {routeName: 'information', pageName: 'Thống kê về ứng dụng'},
       ],
     }
   }

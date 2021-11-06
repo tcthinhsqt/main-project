@@ -8,26 +8,26 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown"><a href="#"><span>Account</span><i class="bi bi-chevron-down"></i></a>
+      <li class="dropdown"><a href="#"><span>Xem thêm</span><i class="bi bi-chevron-down"></i></a>
         <ul v-if="true">
           <li>
-            <router-link :to="{ name: 'information' }">Information</router-link>
+            <router-link :to="{ name: 'information' }">Thống kê về ứng dụng</router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'login' }">Login</router-link>
+            <router-link :to="{ name: 'login' }">Đăng nhập</router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'register' }">Register</router-link>
+            <router-link :to="{ name: 'register' }">Đăng ký</router-link>
           </li>
         </ul>
         <ul v-else>
           <li>
-            <router-link :to="{ name: 'information' }">Information</router-link>
+            <router-link :to="{ name: 'information' }">Thống kê</router-link>
           </li>
           <li>
-            <router-link :to="{ name: 'profile' }">Profile</router-link>
+            <router-link :to="{ name: 'profile' }">Hồ sơ người dùng</router-link>
           </li>
-          <li><a href="#" class="log-out">Log out</a></li>
+          <li><a href="#" class="log-out">Đăng xuất</a></li>
         </ul>
       </li>
     </ul>
@@ -42,16 +42,16 @@ export default {
     return {
       navbar: {
         home: [
-          {href: '#hero', content: 'Home'},
-          {href: '#asking', content: 'Asking'},
-          {href: '#services', content: 'Services'},
+          {href: '#hero', content: 'Trang chủ'},
+          {href: '#asking', content: 'Đặt câu hỏi'},
+          {href: '#services', content: 'Các dịch vụ'},
         ],
         information: [
-          {href: '#statistic', content: 'Overview'},
+          {href: '#statistic', content: 'Tổng quan'},
         ],
         profile: [
-          {href: '#editProfile', content: 'Edit Profile'},
-          {href: '#changePassword', content: 'Change Password'},
+          {href: '#editProfile', content: 'Chỉnh sửa hồ sơ'},
+          {href: '#changePassword', content: 'Đổi mật khẩu'},
         ]
       }
     }

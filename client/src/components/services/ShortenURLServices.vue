@@ -22,22 +22,22 @@ export default {
                     id          : 1,
                     dataOutDelay: '0',
                     icon        : "<i class='bi bi-book'></i>",
-                    title       : 'Easy',
-                    description : 'ShortURL is easy and fast, enter the long link to get your shortened link'
+                    title       : 'Dễ sử dụng',
+                    description : 'ShortURL dễ dàng và nhanh chóng, hãy nhập liên kết dài để lấy liên kết rút gọn của bạn'
                 },
                 {
                     id          : 3,
                     dataOutDelay: '200',
                     icon        : "<i class='bx bx-shield'></i>",
-                    title       : 'Secure',
-                    description : 'It is fast and secure, our service have HTTPS protocol and data encryption'
+                    title       : 'Bảo mật',
+                    description : 'Nhanh chóng và an toàn, dịch vụ sử dụng giao thức HTTPS và mã hóa dữ liệu'
                 },
                 {
                     id          : 5,
                     dataOutDelay: '400',
                     icon        : "<i class='bx bx-donate-heart'></i>",
-                    title       : 'Reliable',
-                    description : 'All links that try to disseminate spam, viruses and malware are deleted'
+                    title       : 'Tin cậy',
+                    description : 'Tất cả thông tin bạn nhận được từ hệ thống đều được kiểm soát chặt chẽ'
                 }
             ]
         }

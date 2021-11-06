@@ -5,11 +5,11 @@
         <div class="card-header border-0">
           <div class="row align-items-center">
             <div class="col">
-              <h3 class="mb-0">Recent Evaluations</h3>
+              <h3 class="mb-0">Đánh giá gần đây</h3>
             </div>
             <div class="col">
               <input type="search" id="form1" class="form-control input-search"
-                     placeholder="Search evaluation"/>
+                     placeholder="Tìm kiếm đánh giá"/>
             </div>
             <div class="col text-right">
               <ul class="nav nav-pills justify-content-end">
@@ -17,7 +17,7 @@
                   <a type="button" class="nav-link py-2 px-3 active">
                                         <span class="d-none d-md-block">
                                             <i class="bi bi-folder-symlink"></i>
-                                            Extract to CSV
+                                            Xuất ra file CSV
                                         </span>
                     <span class="d-md-none"><i class="bi bi-plus-lg"></i></span>
                   </a>
@@ -42,7 +42,7 @@ export default {
     return {
       shortenURLData: {
         name: 'short-url',
-        header: ['Question', 'Answer', 'Rating', 'Feedback', ''],
+        header: ['Câu hỏi', 'Câu trả lời', 'Đánh giá', 'Phản hồi', ''],
         data: [
           {
             question: 'Câu hỏi 1',

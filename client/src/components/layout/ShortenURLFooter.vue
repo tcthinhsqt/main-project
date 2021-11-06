@@ -5,13 +5,15 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-6">
                         <div class="footer-info">
-                            <h3>THE QUESTION ANSWERING SYSTEM</h3>
-                            <p class="pb-3"><em>Easy to use - easy to learn.</em></p>
+                            <h3>HỆ THỐNG TRẢ LỜI CÂU HỎI TỰ ĐỘNG</h3>
+                            <b class="pb-3"><em>Nhanh chóng - Cập nhật - Đáp ứng đa dạng</em></b>
                             <p>
-                                Go Vap <br>
-                                Ho Chi Minh, VN<br><br>
-                                <strong>Phone:</strong> +84 12 445 678<br>
-                                <strong>Email:</strong> info@example.com<br>
+                                12 Nguyễn Văn Bảo, Phường 4, Quận Gò Vấp 
+                                <br>
+                                Thành phố Hồ Chí Minh, Việt Nam
+                                <br><br>
+                                <strong>Số điện thoại:</strong> +84 12 445 678<br>
+                                <strong>Địa chỉ email:</strong> trancongthinh1999@gmail.com<br>
                             </p>
                             <div class="social-links mt-3">
                                 <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
@@ -24,18 +26,18 @@
                     </div>
 
                     <div class="col-lg-2 col-md-6 footer-links">
-                        <h4>Useful Links</h4>
+                        <h4>Các liên kết</h4>
                         <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Trang chủ</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Liên hệ</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Các dịch vụ</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Điều khoản dịch vụ</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Chính sách bảo mật</a></li>
                         </ul>
                     </div>
 
                     <div class="col-lg-2 col-md-6 footer-links">
-                        <h4>Our Services</h4>
+                        <h4>Các dịch vụ</h4>
                         <ul>
                             <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
@@ -46,9 +48,9 @@
                     </div>
 
                     <div class="col-lg-4 col-md-6 footer-newsletter">
-                        <h4>Our Newsletter</h4>
+                        <h4>Bảng tin của chúng tôi</h4>
                         <form action="" method="post" @submit.prevent="">
-                            <input type="email" name="email"><input type="submit" value="Subscribe">
+                            <input type="email" name="email"><input type="submit" value="Đăng ký">
                         </form>
 
                     </div>
@@ -59,7 +61,7 @@
 
         <div class="container">
             <div class="copyright">
-                &copy; Copyright <strong><span>THE QUESTION ANSWERING</span></strong>. All Rights Reserved
+                &copy; Bản quyền thuộc về <strong><span>HỆ THỐNG TRẢ LỜI CÂU HỎI - IUH</span></strong>. Bản quyền đã được đăng ký
             </div>
         </div>
     </footer>

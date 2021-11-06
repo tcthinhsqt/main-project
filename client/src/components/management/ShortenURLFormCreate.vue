@@ -3,14 +3,14 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 id="myModalLabel">EVALUATE</h1>
+          <h1 id="myModalLabel">ĐÁNH GIÁ</h1>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true"><i class="bi bi-x-lg"></i></span></button>
         </div>
         <div class="modal-body">
           <form>
             <div class="form-group">
-              <label>Rating</label>
+              <label>Xếp hạng câu trả lời của chúng tôi:</label>
               <select class="form-control form-select" aria-label="Default select example"
                       id="select-domain">
                 <option v-for="item in ratingOption" :key="item" :selected="{selected: item === 1}">{{ item }}</option>
@@ -19,16 +19,16 @@
             <div class="form-group form-check">
               <input type="checkbox" class="form-check-input" id="choose-back-half"
                      v-model="isCustomizeBackHalf">
-              <label class="form-check-label" for="choose-back-half">Enter feedback</label>
+              <label class="form-check-label" for="choose-back-half">Góp ý cho chúng tôi</label>
             </div>
             <div class="form-group" v-show="isCustomizeBackHalf">
               <textarea class="form-control" v-model="feedback"
-                        aria-placeholder="Enter feedback" resize="none" rows="6"></textarea>
+                        placeholder="Nhập thông tin góp ý của bạn" resize="none" rows="6"></textarea>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-warning" id="create">Submit</button>
+          <button type="submit" class="btn btn-warning" id="create">Gửi phản hồi</button>
         </div>
       </div>
     </div>
