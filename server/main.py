@@ -11,8 +11,7 @@ application = Flask(__name__)
 application.config.update(SECRET_KEY = os.urandom(24))
 application.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:root@db/admin'
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-CORS(application,resources={r"/api": {"origins": "*"}})
-application.config['CORS_HEADERS'] = 'Content-Type'
+CORS(application)
 
 db    = SQLAlchemy(application)
 model = Transformer_model()
@@ -63,7 +62,6 @@ class Validation(db.Model):
         return '<Validation %r>' % self.rank
 
 @application.route('/api/test', methods=['GET'])
-@cross_origin(origin='*',headers=['content-type'])
 def result1():
     users = User.query.all()
     users = [User.getInfo(user) for user in users]
@@ -71,7 +69,6 @@ def result1():
     return users[2]
 
 @application.route('/api/register', methods=['POST'])
-@cross_origin(origin='*',headers=['content-type'])
 def register():
     try:
         data = request.form
@@ -101,7 +98,6 @@ def register():
         return jsonify(code = 403, message = 'Register failed!!!')
 
 @application.route('/api/login', methods=['POST'])
-@cross_origin(origin='*',headers=['content-type'])
 def login():
     try:
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'  #check if string is an email
@@ -120,7 +116,6 @@ def login():
         return jsonify(code = 403, message = 'Login information does not match our records!!!')
 
 @application.route('/api/validate', methods=['POST'])
-@cross_origin(origin='*',headers=['content-type'])
 def validate():
     try:
         data = request.form
@@ -138,7 +133,6 @@ def validate():
         return jsonify(code = 403, message = 'Validate failed!!!')
 
 @application.route('/api/question', methods=['POST'])
-@cross_origin(origin='*',headers=['content-type'])
 def question():
     try:
         question         = str(request.form.get('input_sentence')).strip()
