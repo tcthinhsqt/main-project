@@ -66,7 +66,7 @@ def result1():
     users = User.query.all()
     users = [User.getInfo(user) for user in users]
 
-    return users[2]
+    return "sadasd"
 
 @application.route('/api/register', methods=['POST'])
 def register():
@@ -142,5 +142,5 @@ def question():
     except:
         return jsonify(code = 403, message = 'The question was wrong!!!')
 
-if __name__ == "__main__":
-    application.run(debug = True, host = '0.0.0.0')
+# if __name__ == "__main__":
+#     application.run(debug = True, host = '0.0.0.0')
