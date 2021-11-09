@@ -29,7 +29,7 @@
                   Đặt câu hỏi
                 </button>
               </div>
-              <ShortenURLLoading v-show="false"/>
+              <ShortenURLLoading v-show="$store.state.isLoading"/>
             </ValidationObserver>
           </div>
         </div>
@@ -43,7 +43,7 @@
                   <form class="d-flex" @submit.prevent="">
                     <div class="col-md-10">
                       <div class="form-group">
-                        <textarea class="form-control" disabled="true" v-model="answer"></textarea>
+                        <textarea class="form-control" disabled="true">{{data.answer}}</textarea>
                         <span class="form-label">Câu trả lời của bạn</span>
                       </div>
                     </div>
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import {mapActions, mapMutations, mapState} from "vuex";
 import ShortenURLLoading from "./ShortenURLLoading.vue";
 
 export default {
@@ -83,14 +84,17 @@ export default {
     return {
       question: null,
       isShowResult: false,
-      isDisableShortenBtn: false,
-      answer: 'Đây là một câu trả lời rất dài rất dài rất dài rất dài rất dài rất dài rất dài rất dài' +
-          'dài lắm luôn quá dài tôi là ai ai là tôi chấm chấm chấm',
+      isDisableShortenBtn: false
     }
   },
+  computed: {
+    ...mapState('QA', ['errors', 'data']),
+  },
   methods: {
+    ...mapActions('QA', ['createAnswer']),
+    ...mapMutations('QA', ['resetErrors']),
     copyToClipboard() {
-      navigator.clipboard.writeText(this.answer).then(function () {
+      navigator.clipboard.writeText(this.data.answer).then(function () {
         alert('Sao chép thành công');
       }, function () {
         alert('Không thể sao chép');
@@ -104,8 +108,15 @@ export default {
       this.isDisableShortenBtn = false;
     },
     async submitCreateShortenUrl() {
-      this.isShowResult = true;
-      this.isDisableShortenBtn = true;
+      this.resetErrors();
+      await this.createAnswer({question: this.question});
+      if (this.errors === null) {
+        this.isShowResult        = true;
+        this.isDisableShortenBtn = true;
+      } else {
+        this.isShowResult = false;
+        this.$refs.urlFormCreate.setErrors(this.errors);
+      }
     },
   },
 }

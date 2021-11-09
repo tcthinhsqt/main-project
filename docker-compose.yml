@@ -23,8 +23,9 @@ services:
     volumes:
       - ./server:/srv
     restart: always
-    expose:
-      - 5000
+    command: bash -c "python main.py"
+    ports:
+      - 5000:5000
     depends_on:
       - db
     networks:

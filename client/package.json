@@ -17,12 +17,14 @@
     "lodash": "^4.17.19",
     "moment": "^2.29.1",
     "npm-watch": "^0.11.0",
+    "secure-ls": "^1.2.6",
     "uuid": "^8.3.2",
     "vee-validate": "^3.4.13",
     "vue": "^2.6.14",
     "vue-fragment": "^1.5.1",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

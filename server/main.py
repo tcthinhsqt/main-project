@@ -6,11 +6,13 @@ from datetime import datetime, date
 import os
 import hashlib
 import re
+import concurrent.futures
 
 application = Flask(__name__)
 application.config.update(SECRET_KEY = os.urandom(24))
 application.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:root@db/admin'
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+application.config['CORS_HEADERS'] = 'Content-Type'
 CORS(application)
 
 db    = SQLAlchemy(application)
@@ -66,7 +68,7 @@ def result1():
     users = User.query.all()
     users = [User.getInfo(user) for user in users]
 
-    return users[2]
+    return users[1]
 
 @application.route('/api/register', methods=['POST'])
 def register():
@@ -134,13 +136,19 @@ def validate():
 
 @application.route('/api/question', methods=['POST'])
 def question():
-    try:
-        question         = str(request.form.get('input_sentence')).strip()
+    def do_work(question):
+        # do something that takes a long time
         answer, question = model.evaluate(question)
 
-        return jsonify(answer = answer, question = question)
+        return answer, question
+    try:
+        question = str(request.get_json(silent=True)).strip()
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(do_work, question)
+            answer, question = future.result()
+            return jsonify(answer = answer, question = question)
     except:
         return jsonify(code = 403, message = 'The question was wrong!!!')
 
-# if __name__ == "__main__":
-#     application.run(debug = True, host = '0.0.0.0')
+if __name__ == "__main__":
+    application.run(debug = True, host = '0.0.0.0')

@@ -8,6 +8,6 @@ import {trimEnd} from 'lodash';
 
 export default {
     internal: {
-        baseUrl: trimEnd(process.env.MIX_API_SERVER, '/'),
+        baseUrl: trimEnd('http://localhost:5000', '/'),
     },
 };
