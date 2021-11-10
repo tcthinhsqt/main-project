@@ -1,16 +1,20 @@
-from flask                         import Flask, request, flash, jsonify, make_response
+from flask                         import Flask, request, flash, jsonify, make_response, abort
 from flask_sqlalchemy              import SQLAlchemy
 from flask_cors                    import CORS
 from transformer.Transformer_model import Transformer_model
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import os
 import hashlib
 import re
 import concurrent.futures
+from werkzeug.exceptions import HTTPException
+import uuid
 
 application = Flask(__name__)
 application.config.update(SECRET_KEY = os.urandom(24))
-application.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:root@db/admin'
+application.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:root@db/admin?charset=utf8mb4'
+application.config["MYSQL_DATABASE_CHARSET "] = 'utf8mb4'
+application.config["MYSQL_CHARSET "] = 'utf8mb4'
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 application.config['CORS_HEADERS'] = 'Content-Type'
 CORS(application)
@@ -30,6 +34,8 @@ class User(db.Model):
     registration_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     faculty           = db.Column(db.String(70))
     degree            = db.Column(db.String(20))
+    remember_token    = db.Column(db.String(50))
+    expired_time      = db.Column(db.DateTime)
     validations       = db.relationship('Validation')
 
     def getInfo(user):
@@ -44,7 +50,9 @@ class User(db.Model):
                            number_access     = user.number_access,
                            registration_date = user.registration_date,
                            faculty           = user.faculty,
-                           degree            = user.degree
+                           degree            = user.degree,
+                           expired_time      = user.expired_time,
+                           remember_token    = user.remember_token
                        )
 
     def __repr__(self):
@@ -71,15 +79,16 @@ def result1():
     return users[1]
 
 @application.route('/api/register', methods=['POST'])
+@application.errorhandler(Exception)
 def register():
     try:
-        data = request.form
+        data = request.get_json(silent=True)
 
         idExists = User.query.filter_by(id=data['id']).first() is not None
         emailExists = User.query.filter_by(email=data['email']).first() is not None
 
         if(idExists == True or emailExists == True):
-            return jsonify(code = 403, message = 'Error: MSSV or Email was exists!!!')
+            return jsonify(code = 403, id = 'Error: MSSV or Email was exists!!!', email = 'Error: MSSV or Email was exists!!!'), 403
 
         user = User(
                     id                = data['id'],
@@ -97,13 +106,14 @@ def register():
 
         return jsonify(code = 200, message = 'Register successful!!!')
     except:
-        return jsonify(code = 403, message = 'Register failed!!!')
+        return jsonify(code = 403, message = 'Register Failed!!!'), 403
 
 @application.route('/api/login', methods=['POST'])
+@application.errorhandler(Exception)
 def login():
     try:
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'  #check if string is an email
-        data  = request.form
+        data = request.get_json(silent=True)
 
         if(re.search(regex, data['username'])):
             user = User.query.filter_by(email = data['username']).first_or_404()
@@ -113,9 +123,34 @@ def login():
         if(user.password != hashlib.md5(data['password'].encode()).hexdigest()):
             raise Exception()
 
+        user.remember_token = str(uuid.uuid4())
+        user.expired_time = datetime.now() + timedelta(hours=1)
+        db.session.commit()
+
         return User.getInfo(user)
+
     except:
-        return jsonify(code = 403, message = 'Login information does not match our records!!!')
+        return jsonify(code = 403, message = 'Login information does not match our records!!!'), 403
+
+@application.route('/api/logout', methods=['POST'])
+@application.errorhandler(Exception)
+def logout():
+    try:
+        data = request.get_json(silent=True)
+
+        user = User.query.filter_by(id = data['id']).first_or_404()
+
+        if(not user):
+            raise Exception()
+
+        user.remember_token = None
+        user.expired_time   = None
+        db.session.commit()
+
+        return jsonify(code = 200, message = 'Logout successful!!!'), 200
+
+    except:
+        return jsonify(code = 403, message = 'Logout Failed!!!'), 403
 
 @application.route('/api/validate', methods=['POST'])
 def validate():
@@ -135,6 +170,7 @@ def validate():
         return jsonify(code = 403, message = 'Validate failed!!!')
 
 @application.route('/api/question', methods=['POST'])
+@application.errorhandler(Exception)
 def question():
     def do_work(question):
         # do something that takes a long time
@@ -148,7 +184,6 @@ def question():
             answer, question = future.result()
             return jsonify(answer = answer, question = question)
     except:
-        return jsonify(code = 403, message = 'The question was wrong!!!')
-
+        return jsonify(code = 403, question = 'The question was wrong!!!'), 403
 if __name__ == "__main__":
     application.run(debug = True, host = '0.0.0.0')

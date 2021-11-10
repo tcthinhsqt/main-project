@@ -2,9 +2,10 @@ import api from './';
 
 /**
  *
+ * @param id
  * @returns {Promise<AxiosResponse<any>>}
  */
-export const logout = () => api.post(`logout`);
+export const logout = (id) => api.post(`logout`, id);
 
 /**
  *

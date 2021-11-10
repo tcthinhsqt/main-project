@@ -33,7 +33,7 @@ export default {
          * @param errors
          */
         setErrors(state, errors) {
-            state.errors = errors.response.data.errors;
+            state.errors = errors.response.data;
         }
     },
     actions: {

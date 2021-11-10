@@ -8,8 +8,30 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown"><a href="#"><span>Xem thêm</span><i class="bi bi-chevron-down"></i></a>
-        <ul v-if="true">
+      <li class="dropdown" v-if="user">
+        <a href="#">
+          <span>{{ user.name }}</span>
+          <i class="bi bi-chevron-down"></i>
+        </a>
+        <ul>
+          <li>
+            <router-link :to="{ name: 'information' }">Thống kê về ứng dụng</router-link>
+          </li>
+          <li v-if="user.id === 1">
+            <router-link :to="{ name: 'admin' }">Manager</router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'profile' }">Hồ sơ người dùng</router-link>
+          </li>
+          <li><a @click="handleLogout" class="log-out">Đăng xuất</a></li>
+        </ul>
+      </li>
+      <li class="dropdown" v-else>
+        <a href="#">
+          <span>Account</span>
+          <i class="bi bi-chevron-down"></i>
+        </a>
+        <ul>
           <li>
             <router-link :to="{ name: 'information' }">Thống kê về ứng dụng</router-link>
           </li>
@@ -20,15 +42,6 @@
             <router-link :to="{ name: 'register' }">Đăng ký</router-link>
           </li>
         </ul>
-        <ul v-else>
-          <li>
-            <router-link :to="{ name: 'information' }">Thống kê</router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'profile' }">Hồ sơ người dùng</router-link>
-          </li>
-          <li><a href="#" class="log-out">Đăng xuất</a></li>
-        </ul>
       </li>
     </ul>
     <i class="bi bi-list mobile-nav-toggle"></i>
@@ -36,6 +49,8 @@
 </template>
 
 <script>
+import {mapActions, mapMutations, mapState} from "vuex";
+
 export default {
   name: "ShortenURLSubHeader",
   data() {
@@ -56,6 +71,22 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState('auth', ['responseErrors', 'user']),
+  },
+  methods: {
+    ...mapMutations('auth', ['resetErrors']),
+    ...mapActions('auth', ['logout']),
+    async handleLogout() {
+      this.resetErrors();
+      await this.logout();
+      if (this.responseErrors === null) {
+        await this.$router.push({name: 'login'});
+      } else {
+        alert(this.responseErrors.message);
+      }
+    }
+  }
 }
 </script>
 

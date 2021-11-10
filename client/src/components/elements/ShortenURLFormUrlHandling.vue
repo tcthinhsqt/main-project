@@ -43,7 +43,7 @@
                   <form class="d-flex" @submit.prevent="">
                     <div class="col-md-10">
                       <div class="form-group">
-                        <textarea class="form-control" disabled="true">{{data.answer}}</textarea>
+                        <textarea class="form-control" disabled="true" v-model="data.answer"></textarea>
                         <span class="form-label">Câu trả lời của bạn</span>
                       </div>
                     </div>
@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     ...mapActions('QA', ['createAnswer']),
-    ...mapMutations('QA', ['resetErrors']),
+    ...mapMutations('QA', ['resetErrors', 'setAnswer']),
     copyToClipboard() {
       navigator.clipboard.writeText(this.data.answer).then(function () {
         alert('Sao chép thành công');
@@ -103,6 +103,10 @@ export default {
     closeResult() {
       this.isShowResult = false;
       this.isDisableShortenBtn = false;
+      this.setAnswer({
+        question: null,
+        answer: null
+      })
     },
     handleClickShortenInput() {
       this.isDisableShortenBtn = false;
@@ -111,7 +115,7 @@ export default {
       this.resetErrors();
       await this.createAnswer({question: this.question});
       if (this.errors === null) {
-        this.isShowResult        = true;
+        this.isShowResult = true;
         this.isDisableShortenBtn = true;
       } else {
         this.isShowResult = false;

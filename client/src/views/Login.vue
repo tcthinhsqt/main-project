@@ -88,8 +88,8 @@
                     <span class="text-muted">Giữ trạng thái đăng nhập cho lần sau</span>
                   </label>
                 </div>
-                <div class="input-group invalid-feedback" v-if="false">
-                  Thông báo lỗi
+                <div class="input-group invalid-feedback" v-if="responseErrors">
+                  {{ responseErrors.message }}
                 </div>
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary my-4" :disabled="invalid">Đăng nhập
@@ -117,6 +117,7 @@
 </template>
 
 <script>
+import {mapActions, mapMutations, mapState} from "vuex";
 import ShortenURLLoading from "../components/elements/ShortenURLLoading.vue";
 
 export default {
@@ -131,9 +132,21 @@ export default {
       },
     }
   },
-  methods: {
+  created() {
+    this.resetErrors();
+  },
+  computed: {
+    ...mapState('auth', ['responseErrors']),
+  },
+  methods : {
+    ...mapMutations('auth', ['resetErrors']),
+    ...mapActions('auth', ['login']),
     async submitLogin() {
-
+      this.resetErrors();
+      await this.login(this.credentials);
+      if (this.responseErrors === null) {
+        await this.$router.push({name: 'home'});
+      }
     },
   }
 }

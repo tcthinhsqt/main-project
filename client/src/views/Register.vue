@@ -42,7 +42,27 @@
               </div>
               <ValidationObserver ref="register" @submit.prevent="submitRegisterForm" tag="form"
                                   v-slot="{ invalid }">
-                <ValidationProvider vid="username" name="Username" rules="required|alpha|min:5"
+                <ValidationProvider vid="id" name="Id" rules="required|numeric|min:8"
+                                    v-slot="{ errors }">
+                  <div class="form-group">
+                    <div class="input-group input-group-merge input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-align-middle"></i></span>
+                      </div>
+                      <input class="form-control"
+                             placeholder="Mã số sinh viên hoặc mã giảng viên"
+                             type="text"
+                             :class="{'is-invalid': errors[0]}"
+                             v-model="userDataForm.id"
+                             autocomplete="off"
+                      >
+                    </div>
+                    <div class="input-group invalid-feedback">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </ValidationProvider>
+                <ValidationProvider vid="name" name="Name" rules="required|min:12"
                                     v-slot="{ errors }">
                   <div class="form-group">
                     <div class="input-group input-group-merge input-group-alternative">
@@ -50,10 +70,11 @@
                         <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Mã số sinh viên hoặc mã giảng viên"
+                             placeholder="Họ và tên"
                              type="text"
                              :class="{'is-invalid': errors[0]}"
-                             v-model="userDataForm.username"
+                             v-model="userDataForm.name"
+                             autocomplete="off"
                       >
                     </div>
                     <div class="input-group invalid-feedback">
@@ -73,6 +94,7 @@
                              type="email"
                              :class="{'is-invalid': errors[0]}"
                              v-model="userDataForm.email"
+                             autocomplete="off"
                       >
                     </div>
                     <div class="input-group invalid-feedback">
@@ -118,6 +140,100 @@
                     </div>
                   </div>
                 </ValidationProvider>
+                <ValidationProvider vid="birthday" name="Birthday"
+                                    rules="required"
+                                    v-slot="{ errors }">
+                  <div class="form-group">
+                    <div class="input-group input-group-merge input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                      </div>
+                      <input class="form-control"
+                             placeholder="Nhập lại mật khẩu"
+                             type="date"
+                             :class="{'is-invalid': errors[0]}"
+                             v-model="userDataForm.birthday"
+                      >
+                    </div>
+                    <div class="input-group invalid-feedback">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </ValidationProvider>
+                <ValidationProvider vid="gender" name="Gender"
+                                    rules="required"
+                                    v-slot="{ errors }">
+                  <div class="form-group">
+                    <div class="input-group input-group-merge input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                      </div>
+                      <select class="form-control" v-model="userDataForm.gender" :class="{'is-invalid': errors[0]}">
+                        <option value=1>Nam</option>
+                        <option value=2>Nữ</option>
+                        <option value=0 selected>Khác</option>
+                      </select>
+                    </div>
+                    <div class="input-group invalid-feedback">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </ValidationProvider>
+                <ValidationProvider vid="address" name="Address" v-slot="{ errors }">
+                  <div class="form-group">
+                    <div class="input-group input-group-merge input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+                      </div>
+                      <input class="form-control"
+                             placeholder="Địa chỉ"
+                             type="text"
+                             :class="{'is-invalid': errors[0]}"
+                             v-model="userDataForm.address"
+                             autocomplete="off"
+                      >
+                    </div>
+                    <div class="input-group invalid-feedback">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </ValidationProvider>
+                <ValidationProvider vid="faculty" name="Faculty" v-slot="{ errors }">
+                  <div class="form-group">
+                    <div class="input-group input-group-merge input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-building"></i></span>
+                      </div>
+                      <input class="form-control"
+                             placeholder="Khoa"
+                             type="text"
+                             :class="{'is-invalid': errors[0]}"
+                             v-model="userDataForm.faculty"
+                             autocomplete="off"
+                      >
+                    </div>
+                    <div class="input-group invalid-feedback">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </ValidationProvider>
+                <ValidationProvider vid="degree" name="Degree" v-slot="{ errors }">
+                  <div class="form-group">
+                    <div class="input-group input-group-merge input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-award-fill"></i></span>
+                      </div>
+                      <select class="form-control" v-model="userDataForm.degree" :class="{'is-invalid': errors[0]}">
+                        <option value="Đại học">Đại học</option>
+                        <option value="Cao đẳng">Cao đẳng</option>
+                        <option value="Khác">Khác</option>
+                      </select>
+                    </div>
+                    <div class="input-group invalid-feedback">
+                      {{ errors[0] }}
+                    </div>
+                  </div>
+                </ValidationProvider>
                 <ValidationProvider ref="agree" name="Agree Policy"
                                     :rules="{ required: { allowFalse: false } }"
                                     v-slot="{ errors }">
@@ -141,9 +257,12 @@
                     </div>
                   </div>
                 </ValidationProvider>
+                <div class="input-group invalid-feedback" v-if="responseErrors">
+                  {{ responseErrors.message ? responseErrors.message : '' }}
+                </div>
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary mt-4" :disabled="invalid">
-                      Tạo tài khoản
+                    Tạo tài khoản
                   </button>
                 </div>
               </ValidationObserver>
@@ -168,6 +287,7 @@
 </template>
 
 <script>
+import {mapActions, mapMutations, mapState} from "vuex";
 import ShortenURLLoading from "../components/elements/ShortenURLLoading.vue";
 
 export default {
@@ -176,19 +296,34 @@ export default {
   data() {
     return {
       userDataForm: {
-        username: "",
+        id: "",
+        name: "",
+        birthday: "",
+        gender: "",
+        address: "",
         email: "",
         password: "",
         password_confirmation: "",
+        faculty: "",
+        degree: ""
       },
       isAgree: false,
     }
   },
+  computed: mapState('auth', ['responseErrors']),
   methods: {
+    ...mapMutations('auth', ['resetErrors']),
+    ...mapActions('auth', ['register']),
     async submitRegisterForm() {
+      this.resetErrors();
+      await this.register(this.userDataForm);
+      if (this.responseErrors === null) {
+        await this.$router.push({name: 'login'});
+      } else {
+        this.$refs.register.setErrors(this.responseErrors);
+      }
     },
   }
-
 }
 </script>
 

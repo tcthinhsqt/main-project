@@ -7,6 +7,8 @@ import Dashboard from "../views/Dashboard";
 import Error            from "../views/Error";
 import Profile from "../views/Profile";
 import Admin from "../views/Admin";
+import auth       from '../middleware/auth.js'
+import Middleware from "../middleware";
 
 Vue.use(VueRouter)
 
@@ -40,6 +42,11 @@ const routes = [
         path     : "/admin",
         name     : "admin",
         component: Admin,
+        meta     : {
+            middleware: [
+                auth
+            ]
+        },
     },
     {
         path     : "/error",
@@ -58,5 +65,9 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    (new Middleware()).execute(to, from, next);
+});
 
 export default router
