@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="card-body">
-          <chartjs-bar :labels="labels" :datasets="chartData" v-if="load"></chartjs-bar>
+          <ShortenURLBarChart v-if="loaded" :chartdata="chartdata" :options="options"/>
         </div>
       </div>
     </div>
@@ -35,49 +35,54 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
+import ShortenURLBarChart from "./ShortenURLBarChart";
 
 export default {
   name: "ShortenURLOverviewChart",
+  components: {ShortenURLBarChart},
   data() {
     return {
-      labels: [1, 2, 3, 4, 5],
-      datasets: [{
-        label: 'Số lượt đánh giá',
-        data: null,
-        backgroundColor: [
-          'rgba(153, 102, 255, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(153, 102, 255, 1)',
-        ],
-      }],
-      load: false,
+      chartdata: null,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      },
+      loaded: false,
     }
   },
-  created() {
-    this.setData();
+  async mounted() {
+    this.loaded = false;
+    await this.setData();
+    this.loaded = true;
   },
   computed: {
-    ...mapState('validation', ['data']),
-    chartData() {
-      return this.datasets;
-    },
+    ...mapState('validation', ['data', 'errors']),
   },
   methods: {
-    setData() {
-      this.load = false;
-      this.datasets.data = this.data.rate;
-      this.load = true;
-    }
+    ...mapMutations('validation', ['resetErrors']),
+    ...mapActions('validation', ['getStatisticData']),
+    async setData() {
+      await this.getStatisticData();
+      if (!this.errors) {
+        this.chartdata = {
+          labels: ["1 sao", "2 sao", "3 sao", "4 sao", "5 sao"],
+          datasets: [{
+            label: 'Số lượt đánh giá',
+            data: this.data.rate,
+            backgroundColor: [
+              'rgba(153, 102, 255, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(153, 102, 255, 1)',
+            ],
+          }],
+        };
+      } else {
+        alert(this.errors.message);
+      }
+    },
   },
-  // watch: {
-  //   datasets: function() {
-  //     this._chart.destroy();
-  //     //this.renderChart(this.data, this.options);
-  //     this.renderChart();
-  //   }
-  // }
 }
 </script>
