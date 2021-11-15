@@ -95,7 +95,7 @@
                   <button type="submit" class="btn btn-primary my-4" :disabled="invalid">Đăng nhập
                   </button>
                 </div>
-                <ShortenURLLoading v-show="false"/>
+                <ShortenURLLoading v-show="$store.state.isLoading"/>
               </ValidationObserver>
             </div>
           </div>
@@ -144,7 +144,7 @@ export default {
     async submitLogin() {
       this.resetErrors();
       await this.login(this.credentials);
-      if (this.responseErrors === null) {
+      if (!this.responseErrors) {
         await this.$router.push({name: 'home'});
       }
     },

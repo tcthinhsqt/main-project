@@ -89,6 +89,7 @@ export default {
   },
   computed: {
     ...mapState('QA', ['errors', 'data']),
+    ...mapState('auth', ['user']),
   },
   methods: {
     ...mapActions('QA', ['createAnswer']),
@@ -113,7 +114,7 @@ export default {
     },
     async submitCreateShortenUrl() {
       this.resetErrors();
-      await this.createAnswer({question: this.question});
+      await this.createAnswer({cauHoi: this.question, id: this.user ? this.user.id : null});
       if (this.errors === null) {
         this.isShowResult = true;
         this.isDisableShortenBtn = true;

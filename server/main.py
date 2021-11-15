@@ -9,6 +9,7 @@ import re
 import concurrent.futures
 from werkzeug.exceptions import HTTPException
 import uuid
+from sqlalchemy import extract
 
 application = Flask(__name__)
 application.config.update(SECRET_KEY = os.urandom(24))
@@ -17,7 +18,7 @@ application.config["MYSQL_DATABASE_CHARSET "] = 'utf8mb4'
 application.config["MYSQL_CHARSET "] = 'utf8mb4'
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 application.config['CORS_HEADERS'] = 'Content-Type'
-CORS(application)
+CORS(application, resources={r"/api/*": {"origins": "*"}})
 
 db    = SQLAlchemy(application)
 model = Transformer_model()
@@ -42,13 +43,13 @@ class User(db.Model):
         return jsonify(
                            id                = user.id,
                            name              = user.name,
-                           birthday          = user.birthday,
+                           birthday          = (user.birthday).strftime('%Y/%m/%d'),
                            gender            = user.gender,
                            address           = user.address,
                            email             = user.email,
                            password          = user.password,
                            number_access     = user.number_access,
-                           registration_date = user.registration_date,
+                           registration_date = (user.registration_date).strftime('%Y/%m/%d'),
                            faculty           = user.faculty,
                            degree            = user.degree,
                            expired_time      = user.expired_time,
@@ -67,6 +68,17 @@ class Validation(db.Model):
     feedback      = db.Column(db.String(1000))
     validate_date = db.Column(db.DateTime, default=datetime.utcnow, nullable = False)
     rank          = db.Column(db.Integer, nullable = False)
+
+    def getInfo(validator):
+        return jsonify(
+                           id            = validator.id,
+                           user_id       = validator.user_id,
+                           question      = validator.question,
+                           answer        = validator.answer,
+                           feedback      = validator.feedback,
+                           validate_date = validator.validate_date,
+                           rank          = validator.rank
+                       )
 
     def __repr__(self):
         return '<Validation %r>' % self.rank
@@ -107,6 +119,58 @@ def register():
         return jsonify(code = 200, message = 'Register successful!!!')
     except:
         return jsonify(code = 403, message = 'Register Failed!!!'), 403
+
+@application.route('/api/update-user', methods=['POST'])
+@application.errorhandler(Exception)
+def updateUser():
+    try:
+        data = request.get_json(silent=True)
+
+        user = User.query.filter_by(id = data['id']).first_or_404()
+
+        if(not user):
+            raise Exception()
+
+        user.name     = data['name']
+        user.birthday = data['birthday']
+        user.gender   = data['gender']
+        user.address  = data['address']
+        user.email    = data['email']
+        user.faculty  = data['faculty']
+        user.degree   = data['degree']
+
+        db.session.commit()
+
+#         return jsonify(data = data, user = '')
+        return User.getInfo(user)
+    except:
+        return jsonify(code = 403, message = 'Update Profile Failed!!!'), 403
+
+@application.route('/api/change-password', methods=['POST'])
+@application.errorhandler(Exception)
+def changePassword():
+    try:
+        data = request.get_json(silent=True)
+        id = request.args.get('id')
+
+        user = User.query.filter_by(id = id).first_or_404()
+
+        if(not user):
+            raise Exception()
+
+        if(user.password != hashlib.md5(data['password'].encode()).hexdigest()):
+            return jsonify(code = 403, message = 'Sai mật khẩu!!!'), 403
+
+        if(user.password == hashlib.md5(data['new_password'].encode()).hexdigest()):
+            return jsonify(code = 403, message = 'Mật khẩu mới không thể giống với mật khẩu cũ!!!'), 403
+
+        user.password = hashlib.md5(data['new_password'].encode()).hexdigest()
+
+        db.session.commit()
+
+        return jsonify(code = 200, message = 'Thay đổi mật khẩu thành công!!!')
+    except:
+        return jsonify(code = 403, message = 'Thay đổi mật khẩu thất bại!!!'), 403
 
 @application.route('/api/login', methods=['POST'])
 @application.errorhandler(Exception)
@@ -155,19 +219,23 @@ def logout():
 @application.route('/api/validate', methods=['POST'])
 def validate():
     try:
-        data = request.form
+        data = request.get_json(silent=True)
+        id = request.args.get('id')
+        user = User.query.filter_by(id = id).first()
+        if(not user):
+            id = None
         validation = Validation(
-                                user_id  = data['user_id'],
+                                user_id  = id,
                                 question = data['question'],
                                 answer   = data['answer'],
                                 feedback = data['feedback'],
-                                rank     = data['rank']
+                                rank     = data['rate']
                                )
         db.session.add(validation)
         db.session.commit()
-        return 'Validate successful!!!'
+        return jsonify(code = 200, message = 'Validate successful!!!'), 200
     except:
-        return jsonify(code = 403, message = 'Validate failed!!!')
+        return jsonify(code = 403, message = 'Validate failed!!!'), 403
 
 @application.route('/api/question', methods=['POST'])
 @application.errorhandler(Exception)
@@ -182,8 +250,47 @@ def question():
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(do_work, question)
             answer, question = future.result()
+
+            id = request.args.get('id')
+            if(id):
+                user = User.query.filter_by(id = id).first_or_404()
+
+                if(not user):
+                     raise Exception()
+
+                user.number_access = user.number_access + 1
+
+                db.session.commit()
+
+
             return jsonify(answer = answer, question = question)
     except:
         return jsonify(code = 403, question = 'The question was wrong!!!'), 403
+
+@application.route('/api/statistic', methods=['GET'])
+@application.errorhandler(Exception)
+def statistic():
+    try:
+        users = User.query.all()
+        validations = Validation.query.all()
+        number_validation = Validation.query.count()
+        totalUse = 0
+        totalRate = 0
+
+        for i in users:
+            totalUse = totalUse + i.number_access
+        for i in validations:
+            totalRate = totalRate + i.rank
+
+        averageRate = round(totalRate/number_validation, 1)
+
+        rate = []
+        for i in range(1,6):
+            rate.append(Validation.query.filter_by(rank = i).count())
+
+        return jsonify(totalUse = totalUse, averageRate = averageRate, rate = rate)
+    except:
+        return jsonify(code = 403, question = 'The question was wrong!!!'), 403
+
 if __name__ == "__main__":
     application.run(debug = True, host = '0.0.0.0')

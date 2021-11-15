@@ -15,11 +15,11 @@
                         </div>
                     </div>
                 </div>
-                <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><span
-                        v-html="statisticItem.statusIcon"></span> {{ statisticItem.status }}</span>
-                    <span class="text-nowrap">So với tháng trước</span>
-                </p>
+<!--                <p class="mt-3 mb-0 text-sm">-->
+<!--                    <span class="text-success mr-2"><span-->
+<!--                        v-html="statisticItem.statusIcon"></span> {{ statisticItem.status }}</span>-->
+<!--                    <span class="text-nowrap">So với tháng trước</span>-->
+<!--                </p>-->
             </div>
         </div>
     </div>

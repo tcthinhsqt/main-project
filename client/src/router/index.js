@@ -4,10 +4,10 @@ import Home from '../views/Home.vue'
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Dashboard from "../views/Dashboard";
-import Error            from "../views/Error";
+import Error from "../views/Error";
 import Profile from "../views/Profile";
 import Admin from "../views/Admin";
-import auth       from '../middleware/auth.js'
+import auth from '../middleware/auth.js'
 import Middleware from "../middleware";
 
 Vue.use(VueRouter)
@@ -19,43 +19,48 @@ const routes = [
         component: Home
     },
     {
-        path     : "/profile",
-        name     : "profile",
+        path: "/profile",
+        name: "profile",
         component: Profile,
-    },
-    {
-        path     : "/login",
-        name     : "login",
-        component: Login,
-    },
-    {
-        path     : "/register",
-        name     : "register",
-        component: Register,
-    },
-    {
-        path     : "/information",
-        name     : "information",
-        component: Dashboard,
-    },
-    {
-        path     : "/admin",
-        name     : "admin",
-        component: Admin,
-        meta     : {
+        meta: {
             middleware: [
                 auth
             ]
         },
     },
     {
-        path     : "/error",
-        name     : "error",
+        path: "/login",
+        name: "login",
+        component: Login,
+    },
+    {
+        path: "/register",
+        name: "register",
+        component: Register,
+    },
+    {
+        path: "/information",
+        name: "information",
+        component: Dashboard,
+    },
+    {
+        path: "/admin",
+        name: "admin",
+        component: Admin,
+        meta: {
+            middleware: [
+                auth
+            ]
+        },
+    },
+    {
+        path: "/error",
+        name: "error",
         component: Error,
     },
     {
-        path     : "*",
-        name     : "page_not_found",
+        path: "*",
+        name: "page_not_found",
         component: Error,
     },
 ]

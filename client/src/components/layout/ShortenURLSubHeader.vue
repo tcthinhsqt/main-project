@@ -10,7 +10,7 @@
       </li>
       <li class="dropdown" v-if="user">
         <a href="#">
-          <span>{{ user.name }}</span>
+          <span>{{ name }}</span>
           <i class="bi bi-chevron-down"></i>
         </a>
         <ul>
@@ -68,14 +68,17 @@ export default {
           {href: '#editProfile', content: 'Chỉnh sửa hồ sơ'},
           {href: '#changePassword', content: 'Đổi mật khẩu'},
         ]
-      }
+      },
     }
   },
+  created() {
+    this.setDisplayName();
+  },
   computed: {
-    ...mapState('auth', ['responseErrors', 'user']),
+    ...mapState('auth', ['responseErrors', 'user', 'name']),
   },
   methods: {
-    ...mapMutations('auth', ['resetErrors']),
+    ...mapMutations('auth', ['resetErrors', 'setDisplayName']),
     ...mapActions('auth', ['logout']),
     async handleLogout() {
       this.resetErrors();

@@ -62,7 +62,7 @@
                     </div>
                   </div>
                 </ValidationProvider>
-                <ValidationProvider vid="name" name="Name" rules="required|min:12"
+                <ValidationProvider vid="name" name="Name" rules="required|min:6"
                                     v-slot="{ errors }">
                   <div class="form-group">
                     <div class="input-group input-group-merge input-group-alternative">
@@ -102,7 +102,7 @@
                     </div>
                   </div>
                 </ValidationProvider>
-                <ValidationProvider vid="password" name="Password" rules="required" v-slot="{ errors }">
+                <ValidationProvider vid="password" name="Password" rules="required|min:6" v-slot="{ errors }">
                   <div class="form-group">
                     <div class="input-group input-group-merge input-group-alternative">
                       <div class="input-group-prepend">
@@ -140,16 +140,13 @@
                     </div>
                   </div>
                 </ValidationProvider>
-                <ValidationProvider vid="birthday" name="Birthday"
-                                    rules="required"
-                                    v-slot="{ errors }">
+                <ValidationProvider vid="birthday" name="Birthday" rules="required" v-slot="{ errors }">
                   <div class="form-group">
                     <div class="input-group input-group-merge input-group-alternative">
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                       </div>
                       <input class="form-control"
-                             placeholder="Nhập lại mật khẩu"
                              type="date"
                              :class="{'is-invalid': errors[0]}"
                              v-model="userDataForm.birthday"
@@ -266,7 +263,7 @@
                   </button>
                 </div>
               </ValidationObserver>
-              <ShortenURLLoading v-show="false"/>
+              <ShortenURLLoading v-show="$store.state.isLoading"/>
             </div>
           </div>
           <div class="row mt-2">

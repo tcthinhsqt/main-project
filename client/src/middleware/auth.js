@@ -5,7 +5,7 @@
  * @returns {*}
  */
 export default function auth({next, store}) {
-    const auth        = store.state.auth;
+    const auth = store.state.auth;
     const currentTime = Math.floor(Date.now() / 1000);
 
     try {

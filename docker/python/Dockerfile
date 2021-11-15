@@ -20,4 +20,4 @@ ADD /server /srv
 RUN pip install --upgrade pip
 RUN pip install -r /srv/requirements.txt
 
-CMD ["uwsgi", "--ini", "application.ini"]
+#CMD ["uwsgi", "--ini", "application.ini"]

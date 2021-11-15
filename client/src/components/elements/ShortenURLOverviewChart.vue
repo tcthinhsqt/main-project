@@ -16,18 +16,18 @@
                     <span class="d-md-none"><i class="bi bi-calendar"></i></span>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                    <span class="d-none d-md-block">Ngày đánh giá</span>
-                    <span class="d-md-none"><i class="bi bi-graph-up"></i></span>
-                  </a>
-                </li>
+                <!--                <li class="nav-item">-->
+                <!--                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab">-->
+                <!--                    <span class="d-none d-md-block">Ngày đánh giá</span>-->
+                <!--                    <span class="d-md-none"><i class="bi bi-graph-up"></i></span>-->
+                <!--                  </a>-->
+                <!--                </li>-->
               </ul>
             </div>
           </div>
         </div>
         <div class="card-body">
-          <chartjs-bar :labels="labels" :datasets="datasets"></chartjs-bar>
+          <chartjs-bar :labels="labels" :datasets="chartData" v-if="load"></chartjs-bar>
         </div>
       </div>
     </div>
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: "ShortenURLOverviewChart",
   data() {
@@ -42,7 +44,7 @@ export default {
       labels: [1, 2, 3, 4, 5],
       datasets: [{
         label: 'Số lượt đánh giá',
-        data: [65, 59, 80, 81, 56],
+        data: null,
         backgroundColor: [
           'rgba(153, 102, 255, 1)',
           'rgba(153, 102, 255, 1)',
@@ -51,7 +53,31 @@ export default {
           'rgba(153, 102, 255, 1)',
         ],
       }],
+      load: false,
     }
-  }
+  },
+  created() {
+    this.setData();
+  },
+  computed: {
+    ...mapState('validation', ['data']),
+    chartData() {
+      return this.datasets;
+    },
+  },
+  methods: {
+    setData() {
+      this.load = false;
+      this.datasets.data = this.data.rate;
+      this.load = true;
+    }
+  },
+  // watch: {
+  //   datasets: function() {
+  //     this._chart.destroy();
+  //     //this.renderChart(this.data, this.options);
+  //     this.renderChart();
+  //   }
+  // }
 }
 </script>

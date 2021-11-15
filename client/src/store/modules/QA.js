@@ -1,4 +1,5 @@
 import {create} from "../../api/answering";
+import {feedback} from "../../api/feedback";
 
 export default {
     namespaced: true,
@@ -41,14 +42,32 @@ export default {
          *
          * @param commit
          * @param dispatch
-         * @param question
+         * @param questionData
          * @returns {Promise<void>}
          */
-        async createAnswer({commit, dispatch}, question = {}) {
+        async createAnswer({commit, dispatch}, questionData = {}) {
             dispatch('startLoading', null, {root: true});
             try {
-                const {data} = await create(question.question);
+                const {data} = await create(questionData.cauHoi, questionData.id);
                 commit('setAnswer', data);
+            } catch (errors) {
+                commit('setErrors', errors);
+            } finally {
+                dispatch('stopLoading', null, {root: true});
+            }
+        },
+
+        /**
+         *
+         * @param commit
+         * @param dispatch
+         * @param feedbackData
+         * @returns {Promise<void>}
+         */
+        async sendFeedback({commit, dispatch}, feedbackData = {}) {
+            dispatch('startLoading', null, {root: true});
+            try {
+                await feedback(feedbackData.feedbackData, feedbackData.id);
             } catch (errors) {
                 commit('setErrors', errors);
             } finally {

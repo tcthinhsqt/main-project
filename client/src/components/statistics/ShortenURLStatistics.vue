@@ -16,6 +16,7 @@
 <script>
 import ShortenURLBreadcrumb from "../elements/ShortenURLBreadcrumb";
 import ShortenURLStatistic from "./ShortenURLStatistic";
+import {mapActions, mapState} from "vuex";
 
 export default {
   name: "ShortenURLStatistics",
@@ -26,19 +27,17 @@ export default {
         {
           id: 1,
           name: "Tổng số lượt sử dụng",
-          statistic: "897",
+          statistic: null,
           icon: "<i class=\"bi bi-calculator\"></i>",
           statusIcon: "<i class=\"bi bi-arrow-up\"></i>",
-          status: "3,48%",
           backgroundIcon: "icon icon-shape bg-gradient-red text-white rounded-circle shadow"
         },
         {
           id: 2,
           name: "Xếp hạng",
-          statistic: "4.5",
+          statistic: null,
           icon: "<i class=\"bi bi-graph-up\"></i>",
           statusIcon: "<i class=\"bi bi-arrow-up\"></i>",
-          status: "3,68%",
           backgroundIcon: "icon icon-shape bg-gradient-green text-white rounded-circle shadow"
         },
       ],
@@ -46,6 +45,22 @@ export default {
         {routeName: 'home', pageName: 'Trang chủ'},
         {routeName: 'information', pageName: 'Thống kê về ứng dụng'},
       ],
+    }
+  },
+  created() {
+    this.getData();
+  },
+  computed: {
+    ...mapState('validation', ['errors', 'data']),
+  },
+  methods: {
+    ...mapActions('validation', ['getStatisticData']),
+    async getData() {
+      await this.getStatisticData();
+      if (!this.errors) {
+        this.statisticList[0].statistic = this.data.totalUse;
+        this.statisticList[1].statistic = this.data.averageRate;
+      }
     }
   }
 }

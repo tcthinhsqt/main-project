@@ -1,14 +1,11 @@
-import {login, logout, register} from "../../api/authentication.js";
-// import api                                from '../../api';
+import {login, logout, register, updateUser, changePassword} from "../../api/authentication.js";
 
 export default {
     namespaced: true,
     state: {
-        // access_token  : '',
-        // expired_time  : null,
-        // token_type    : '',
         responseErrors: null,
         user: null,
+        name: '',
     },
     mutations: {
         /**
@@ -18,18 +15,6 @@ export default {
         resetErrors(state) {
             state.responseErrors = null;
         },
-        //
-        // /**
-        //  *
-        //  * @param state
-        //  * @param auth
-        //  */
-        // setAuth(state, auth) {
-        //     state.access_token                 = auth?.access_token;
-        //     state.expired_time                 = auth?.expired_time;
-        //     state.token_type                   = auth?.token_type;
-        //     api.defaults.headers.authorization = `${state.token_type} ${state.access_token}`
-        // },
 
         /**
          *
@@ -47,7 +32,24 @@ export default {
          */
         setUser(state, user) {
             state.user = user;
-        }
+        },
+
+        /**
+         *
+         * @param state
+         * @param birthday
+         */
+        setBirthday(state, birthday) {
+            state.user.birthday = birthday
+        },
+
+        /**
+         *
+         * @param state
+         */
+        setDisplayName(state) {
+            state.name = state.user?.name;
+        },
     },
     actions: {
         /**
@@ -100,6 +102,43 @@ export default {
                 commit('setUser', null);
             } catch (errors) {
                 commit('setErrors', errors);
+            }
+        },
+
+        /**
+         *
+         * @param commit
+         * @param dispatch
+         * @param user
+         * @returns {Promise<void>}
+         */
+        async updateUser({commit, dispatch}, user = {}) {
+            dispatch('startLoading', null, {root: true});
+            try {
+                const {data} = await updateUser(user);
+                commit('setUser', data);
+            } catch (errors) {
+                commit('setErrors', errors);
+            } finally {
+                dispatch('stopLoading', null, {root: true});
+            }
+        },
+
+        /**
+         *
+         * @param commit
+         * @param dispatch
+         * @param dataChangePass
+         * @returns {Promise<void>}
+         */
+        async changePassword({commit, dispatch}, dataChangePass = {}) {
+            dispatch('startLoading', null, {root: true});
+            try {
+                await changePassword(dataChangePass.form, dataChangePass.id);
+            } catch (errors) {
+                commit('setErrors', errors);
+            } finally {
+                dispatch('stopLoading', null, {root: true});
             }
         },
     },
