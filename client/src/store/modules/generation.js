@@ -1,13 +1,9 @@
-import {statistic} from "../../api/statistic";
+import {create} from "../../api/generate-data";
 
 export default {
     namespaced: true,
     state: {
-        data: {
-            totalUse: null,
-            averageRate: null,
-            rate: null,
-        },
+        data: null,
         errors: null,
     },
     mutations: {
@@ -24,7 +20,7 @@ export default {
          * @param state
          * @param data
          */
-        setStatisticData(state, data) {
+        setData(state, data) {
             state.data = data;
         },
 
@@ -42,19 +38,20 @@ export default {
          *
          * @param commit
          * @param dispatch
-         * @param questionData
+         * @param files
          * @returns {Promise<void>}
          */
-        async getStatisticData({commit, dispatch}) {
+        async generateData({commit, dispatch}, files = {}) {
             dispatch('startLoading', null, {root: true});
             try {
-                const {data} = await statistic();
-                commit('setStatisticData', data);
+                const {data} = await create(files);
+                commit('setData', data);
             } catch (errors) {
                 commit('setErrors', errors);
             } finally {
                 dispatch('stopLoading', null, {root: true});
             }
         },
+
     },
 }

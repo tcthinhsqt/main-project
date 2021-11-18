@@ -1,27 +1,32 @@
-from flask                         import Flask, request, flash, jsonify, make_response, abort
+from flask                         import Flask, request, flash, jsonify, make_response, abort, send_from_directory, send_file
 from flask_sqlalchemy              import SQLAlchemy
 from flask_cors                    import CORS
 from transformer.Transformer_model import Transformer_model
-from datetime import datetime, date, timedelta
+from generatedata.GenerateData     import GenerateData
+from datetime                      import datetime, date, timedelta
+from werkzeug.exceptions           import HTTPException
+from werkzeug.utils                import secure_filename
+from sqlalchemy                    import extract
+import pandas as pd
 import os
 import hashlib
 import re
 import concurrent.futures
-from werkzeug.exceptions import HTTPException
 import uuid
-from sqlalchemy import extract
 
-application = Flask(__name__)
-application.config.update(SECRET_KEY = os.urandom(24))
-application.config["SQLALCHEMY_DATABASE_URI"] = 'mysql://root:root@db/admin?charset=utf8mb4'
-application.config["MYSQL_DATABASE_CHARSET "] = 'utf8mb4'
-application.config["MYSQL_CHARSET "] = 'utf8mb4'
+application                                          = Flask(__name__)
+application.config.update(SECRET_KEY                 = os.urandom(24))
+application.config["SQLALCHEMY_DATABASE_URI"]        = 'mysql://root:root@db/admin?charset=utf8mb4'
+application.config["MYSQL_DATABASE_CHARSET "]        = 'utf8mb4'
+application.config["MYSQL_CHARSET "]                 = 'utf8mb4'
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-application.config['CORS_HEADERS'] = 'Content-Type'
-CORS(application, resources={r"/api/*": {"origins": "*"}})
+application.config['CORS_HEADERS']                   = 'Content-Type'
+application.config['UPLOAD_PATH']                    = 'uploads'
+CORS(application, resources = {r"/api/*": {"origins": "*"}})
 
-db    = SQLAlchemy(application)
-model = Transformer_model()
+db         = SQLAlchemy(application)
+model      = Transformer_model()
+generation = GenerateData()
 
 class User(db.Model):
     id                = db.Column(db.Integer, primary_key = True, autoincrement = False)
@@ -220,7 +225,7 @@ def logout():
 def validate():
     try:
         data = request.get_json(silent=True)
-        id = request.args.get('id')
+        id   = request.args.get('id')
         user = User.query.filter_by(id = id).first()
         if(not user):
             id = None
@@ -248,7 +253,7 @@ def question():
     try:
         question = str(request.get_json(silent=True)).strip()
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(do_work, question)
+            future           = executor.submit(do_work, question)
             answer, question = future.result()
 
             id = request.args.get('id')
@@ -271,11 +276,11 @@ def question():
 @application.errorhandler(Exception)
 def statistic():
     try:
-        users = User.query.all()
-        validations = Validation.query.all()
+        users             = User.query.all()
+        validations       = Validation.query.all()
         number_validation = Validation.query.count()
-        totalUse = 0
-        totalRate = 0
+        totalUse          = 0
+        totalRate         = 0
 
         for i in users:
             totalUse = totalUse + i.number_access
@@ -289,6 +294,35 @@ def statistic():
             rate.append(Validation.query.filter_by(rank = i).count())
 
         return jsonify(totalUse = totalUse, averageRate = averageRate, rate = rate)
+    except:
+        return jsonify(code = 403, question = 'The question was wrong!!!'), 403
+
+@application.route('/api/generate-data', methods=['POST'])
+@application.errorhandler(Exception)
+def generateData():
+    try:
+        for file in os.scandir(application.config['UPLOAD_PATH']):
+            os.unlink(file.path)
+
+        pattern = request.files['pattern']
+        content = request.files['content']
+
+        pattern_filename = secure_filename(pattern.filename)
+        content_filename = secure_filename(content.filename)
+
+        if pattern_filename != '':
+            pattern.save(os.path.join(application.config['UPLOAD_PATH'], pattern_filename))
+
+        if content_filename != '':
+            content.save(os.path.join(application.config['UPLOAD_PATH'], content_filename))
+
+        noiDungTraLoiVaTomTat = pd.read_csv(os.path.join(application.config['UPLOAD_PATH'], content_filename))
+        mauCauHoi = generation.load_data(os.path.join(application.config['UPLOAD_PATH'], pattern_filename))
+
+        data = generation.taoBoDuLieu(mauCauHoi, noiDungTraLoiVaTomTat)
+        data.to_csv(os.path.join(application.config['UPLOAD_PATH'], 'data.csv'), header = None, index = False)
+
+        return send_from_directory(directory = application.config['UPLOAD_PATH'], filename = 'data.csv'), 200
     except:
         return jsonify(code = 403, question = 'The question was wrong!!!'), 403
 

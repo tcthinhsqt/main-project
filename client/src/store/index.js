@@ -10,6 +10,7 @@ const ls = new SecureLS({isCompression: false});
 import QA from './modules/QA';
 import auth from './modules/auth.js';
 import validation from "./modules/validation";
+import generation from "./modules/generation";
 
 export default new Vuex.Store({
     state: {
@@ -31,7 +32,8 @@ export default new Vuex.Store({
     modules: {
         QA,
         auth,
-        validation
+        validation,
+        generation
     },
     plugins: [
         createPersistedState({

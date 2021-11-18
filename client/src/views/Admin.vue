@@ -13,27 +13,82 @@
               <div class="form-group" hidden>
                 <input type="file" class="form-control-file" id="exampleFormControlFile1">
               </div>
-              <ValidationProvider vid="username" name="username" rules="required"
+              <ValidationProvider vid="pattern" name="Pattern" rules="required"
                                   v-slot="{ errors }">
                 <div class="form-group mb-3">
                   <div class="input-group input-group-merge input-group-alternative">
                     <div class="input-group-prepend">
                       <!--                      <span class="input-group-text"><i class="bi bi-file-earmark"></i></span>-->
-                      <button @click.prevent="chooseFile" class="btn btn-primary" ref="files">
+                      <button @click.prevent="choosePatternFile"
+                              class="btn btn-primary"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="Must be .txt file"
+                              ref="patternBtn">
                         <i class="bi bi-file-earmark"></i>
-                        Chọn file
+                        Chọn file mẫu
                       </button>
 
                     </div>
-                    <input id="display-name" type="text" class="form-control" v-model="filename" disabled>
-                    <input id="files"
+                    <input type="text" class="form-control"
+                           placeholder="Must be .txt file"
+                           v-model="patternFilename"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Must be .txt file"
+                           disabled>
+                    <input id="pattern"
                            class="form-control"
                            placeholder="Chọn một file"
                            type="file"
                            :class="{'is-invalid': errors[0]}"
-                           ref="files"
-                           @change="displayName"
+                           ref="patternFile"
+                           @change="displayPatternName"
+                           name="pattern"
+                           accept=".txt"
                            hidden
+                    >
+                  </div>
+                </div>
+                <div class="input-group invalid-feedback mt--2">
+                  {{ errors[0] }}
+                </div>
+              </ValidationProvider>
+              <ValidationProvider vid="content" name="Content" rules="required"
+                                  v-slot="{ errors }">
+                <div class="form-group mb-3">
+                  <div class="input-group input-group-merge input-group-alternative">
+                    <div class="input-group-prepend">
+                      <!--                      <span class="input-group-text"><i class="bi bi-file-earmark"></i></span>-->
+                      <button @click.prevent="chooseContentFile"
+                              class="btn btn-primary"
+                              data-toggle="tooltip"
+                              data-placement="top"
+                              title="Must be .csv file"
+                              ref="contentBtn">
+                        <i class="bi bi-file-earmark"></i>
+                        Chọn file nội dung
+                      </button>
+
+                    </div>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Must be .csv file"
+                           v-model="contentFilename"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Must be .csv file"
+                           disabled>
+                    <input id="content"
+                           class="form-control"
+                           placeholder="Chọn một file"
+                           type="file"
+                           :class="{'is-invalid': errors[0]}"
+                           ref="contentFile"
+                           @change="displayContentName"
+                           hidden
+                           name="content"
+                           accept="text/csv"
                     >
                   </div>
                 </div>
@@ -47,17 +102,18 @@
                 Thông báo lỗi
               </div>
               <div class="text-center">
-                <button type="submit" class="btn btn-primary my-4" :disabled="invalid">
+                <button type="submit"
+                        class="btn btn-primary my-4"
+                        @click.prevent="handleGenerateData"
+                        :disabled="invalid">
                   <i class="bi bi-box-arrow-right"></i>
                   Phát sinh dữ liệu mới
                 </button>
               </div>
-              <ShortenURLLoading v-show="false"/>
+              <ShortenURLLoading v-show="$store.state.isLoading"/>
             </ValidationObserver>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -66,21 +122,61 @@
 <script>
 import ShortenURLManagement from "../components/management/ShortenURLManagement";
 import ShortenURLLoading from "../components/elements/ShortenURLLoading";
+import {mapActions, mapState} from "vuex";
 
 export default {
   name: "Admin",
   components: {ShortenURLLoading, ShortenURLManagement},
   data() {
     return {
-      filename: '',
+      patternFilename: '',
+      contentFilename: '',
     }
   },
+  computed: {
+    ...mapState('generation', ['data', 'errors']),
+  },
   methods: {
-    async chooseFile() {
-      await this.$refs.files.click();
+    ...mapActions('generation', ['generateData']),
+    async choosePatternFile() {
+      await this.$refs.patternFile.click();
     },
-    displayName() {
-      this.filename = this.$refs.files.files[0].name;
+    async chooseContentFile() {
+      await this.$refs.contentFile.click();
+    },
+    displayPatternName() {
+      this.patternFilename = this.$refs.patternFile.files[0].name;
+    },
+    displayContentName() {
+      this.contentFilename = this.$refs.contentFile.files[0].name;
+    },
+    async handleGenerateData() {
+      const pattern = this.$refs.patternFile.files[0];
+      const content = this.$refs.contentFile.files[0];
+      let formData = new FormData();
+      formData.append('pattern', pattern);
+      formData.append('content', content);
+      await this.generateData(formData);
+      if (!this.errors) {
+        const url = window.URL.createObjectURL(new Blob([this.data],{encoding:"UTF-8",type:"text/csv;charset=UTF-8"}));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'data.csv');
+        document.body.appendChild(link);
+        link.click();
+        // alert('Tạo dữ liệu thành công!!!');
+        // console.log("success");
+      } else {
+        const url = window.URL.createObjectURL(new Blob([this.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'data.csv');
+        document.body.appendChild(link);
+        await link.click();
+        link.remove();
+        // alert('Tạo dữ liệu thất bại!!!');
+        // console.log("false");
+      }
     }
   }
 }
