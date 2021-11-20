@@ -270,7 +270,7 @@ def question():
 
             return jsonify(answer = answer, question = question)
     except:
-        return jsonify(code = 403, question = 'Câu hỏi của bạn không phù hợp. Vui lòng đặt câu hỏi khác phù hợp hơn.'), 403
+        return jsonify(code = 403, question = 'The question was wrong!!!'), 403
 
 @application.route('/api/statistic', methods=['GET'])
 @application.errorhandler(Exception)
