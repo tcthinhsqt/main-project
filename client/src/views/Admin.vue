@@ -122,7 +122,7 @@
 <script>
 import ShortenURLManagement from "../components/management/ShortenURLManagement";
 import ShortenURLLoading from "../components/elements/ShortenURLLoading";
-import {mapActions, mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
   name: "Admin",
@@ -137,6 +137,7 @@ export default {
     ...mapState('generation', ['data', 'errors']),
   },
   methods: {
+    ...mapMutations('generation', ['resetErrors']),
     ...mapActions('generation', ['generateData']),
     async choosePatternFile() {
       await this.$refs.patternFile.click();
@@ -151,6 +152,7 @@ export default {
       this.contentFilename = this.$refs.contentFile.files[0].name;
     },
     async handleGenerateData() {
+      this.resetErrors();
       const pattern = this.$refs.patternFile.files[0];
       const content = this.$refs.contentFile.files[0];
       let formData = new FormData();
@@ -158,26 +160,19 @@ export default {
       formData.append('content', content);
       await this.generateData(formData);
       if (!this.errors) {
-        const url = window.URL.createObjectURL(new Blob([this.data],{encoding:"UTF-8",type:"text/csv;charset=UTF-8"}));
+        const url = window.URL.createObjectURL(new Blob([this.data], {
+          encoding: "UTF-8",
+          type: "text/csv;charset=UTF-8"
+        }));
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', 'data.csv');
         document.body.appendChild(link);
         link.click();
-        // alert('Tạo dữ liệu thành công!!!');
-        // console.log("success");
       } else {
-        const url = window.URL.createObjectURL(new Blob([this.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'data.csv');
-        document.body.appendChild(link);
-        await link.click();
-        link.remove();
-        // alert('Tạo dữ liệu thất bại!!!');
-        // console.log("false");
+        alert('Tạo dữ liệu thất bại!!!');
       }
-    }
+    },
   }
 }
 </script>

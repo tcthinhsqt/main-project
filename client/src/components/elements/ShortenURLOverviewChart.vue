@@ -51,7 +51,7 @@ export default {
       loaded: false,
     }
   },
-  async mounted() {
+  async created() {
     this.loaded = false;
     await this.setData();
     this.loaded = true;
@@ -63,6 +63,7 @@ export default {
     ...mapMutations('validation', ['resetErrors']),
     ...mapActions('validation', ['getStatisticData']),
     async setData() {
+      this.resetErrors();
       await this.getStatisticData();
       if (!this.errors) {
         this.chartdata = {
@@ -80,7 +81,7 @@ export default {
           }],
         };
       } else {
-        alert(this.errors.message);
+        alert("Failed!!!");
       }
     },
   },

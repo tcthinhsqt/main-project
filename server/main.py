@@ -1,4 +1,4 @@
-from flask                         import Flask, request, flash, jsonify, make_response, abort, send_from_directory, send_file
+from flask                         import Flask, request, flash, jsonify, make_response, send_from_directory, make_response
 from flask_sqlalchemy              import SQLAlchemy
 from flask_cors                    import CORS
 from transformer.Transformer_model import Transformer_model
@@ -281,21 +281,25 @@ def statistic():
         number_validation = Validation.query.count()
         totalUse          = 0
         totalRate         = 0
+        rate              = [0, 0, 0, 0, 0]
+        averageRate       = 0
 
-        for i in users:
-            totalUse = totalUse + i.number_access
-        for i in validations:
-            totalRate = totalRate + i.rank
+        if len(users) != 0:
+            for i in users:
+                totalUse = totalUse + i.number_access
+        if len(validations) != 0:
+            for i in validations:
+                totalRate = totalRate + i.rank
 
-        averageRate = round(totalRate/number_validation, 1)
+            averageRate = round(totalRate/number_validation, 1)
 
-        rate = []
-        for i in range(1,6):
-            rate.append(Validation.query.filter_by(rank = i).count())
+            rate = []
+            for i in range(1,6):
+                rate.append(Validation.query.filter_by(rank = i).count())
 
         return jsonify(totalUse = totalUse, averageRate = averageRate, rate = rate)
     except:
-        return jsonify(code = 403, question = 'The question was wrong!!!'), 403
+        return jsonify(code = 403, question = 'Failed!!!'), 403
 
 @application.route('/api/generate-data', methods=['POST'])
 @application.errorhandler(Exception)
@@ -320,11 +324,112 @@ def generateData():
         mauCauHoi = generation.load_data(os.path.join(application.config['UPLOAD_PATH'], pattern_filename))
 
         data = generation.taoBoDuLieu(mauCauHoi, noiDungTraLoiVaTomTat)
-        data.to_csv(os.path.join(application.config['UPLOAD_PATH'], 'data.csv'), header = None, index = False)
+        data.to_csv(os.path.join(application.config['UPLOAD_PATH'], 'data.csv'), header = ['Câu hỏi', 'Câu trả lời'], index = False)
 
         return send_from_directory(directory = application.config['UPLOAD_PATH'], filename = 'data.csv'), 200
     except:
-        return jsonify(code = 403, question = 'The question was wrong!!!'), 403
+        return jsonify(code = 403, question = 'Can not generate data!!!'), 403
+
+@application.route('/api/get-validations', methods=['GET'])
+@application.errorhandler(Exception)
+def getValidations():
+    try:
+        data       = Validation.query.all()
+        start      =request.args.get('start', 1)
+        limit      =request.args.get('limit', 5)
+        url        = "/get-validations"
+
+        start = int(start)
+        limit = int(limit)
+        count = len(data)
+        if count < start or limit < 0:
+            list = None
+        # make response
+        obj                 = dict()
+        obj['start']        = start
+        obj['limit']        = limit
+        obj['count']        = count
+        obj['total_page']   = count//limit + (1 if count % limit > 0 else 0)
+        obj['current_page'] = start//limit + (1 if count % limit > 0 else 0)
+        obj['first']        = {'start': 1, 'limit': limit}
+        obj['last']         = {'start': (count//limit)*limit + 1, 'limit': limit}
+        # make URLs
+        # make previous url
+        if start == 1:
+            obj['previous'] = ''
+        else:
+            start_copy      = max(1, start - limit)
+            limit_copy      = start - 1
+#             obj['previous'] = url + '?start=%d&limit=%d' % (start_copy, limit_copy)
+            obj['previous'] = {'start': start_copy, 'limit': limit_copy}
+        # make next url
+        if start + limit > count:
+            obj['next'] = ''
+        else:
+            start_copy  = start + limit
+#             obj['next'] = url + '?start=%d&limit=%d' % (start_copy, limit)
+            obj['next'] = {'start': start_copy, 'limit': limit}
+        # finally extract result according to bounds
+        list = None
+        if len(data) != 0:
+            list = data[(start - 1):(start - 1 + limit)]
+
+        obj['results'] = []
+        if list is not None:
+            obj['results'] = [
+                                {
+                                    "id"           : list[i].id,
+                                    "user_name"    : (User.query.filter_by(id = list[i].user_id).first()).name if User.query.filter_by(id = list[i].user_id).first() is not None else None,
+                                    "user_id"      : list[i].user_id,
+                                    "question"     : list[i].question,
+                                    "answer"       : list[i].answer,
+                                    "feedback"     : list[i].feedback,
+                                    "validate_date": list[i].validate_date,
+                                    "rank"         : list[i].rank,
+                                } for i in range(0, len(list))
+                            ]
+        return obj
+    except:
+        return jsonify(code = 403, question = 'Can not get list validation!!!'), 403
+
+@application.route('/api/delete-validation', methods=['POST'])
+@application.errorhandler(Exception)
+def deleteValidation():
+    try:
+#         id=request.args.get('id')
+        id = request.get_json(silent=True)
+        if id is None:
+            raise Exception()
+        Validation.query.filter_by(id=id).delete()
+        db.session.commit()
+        return jsonify(code = 200, question = 'Deleted!!!'), 200
+    except:
+        return jsonify(code = 403, question = 'Can not delete!!!'), 403
+
+# @application.route('/api/search-validation', methods=['GET'])
+# @application.errorhandler(Exception)
+# def searchValidation():
+#     try:
+#         rate=request.args.get('rate', None)
+#         validations = Validation.query.filter_by(rank=rate).all()
+#         if len(validations) == 0:
+#             validations = []
+#         return validations
+#     except:
+#         return jsonify(code = 404, question = 'Not found!!!'), 404
+
+@application.route('/api/validation-to-csv', methods=['GET'])
+@application.errorhandler(Exception)
+def validationToCsv():
+    try:
+        for file in os.scandir(application.config['UPLOAD_PATH']):
+            os.unlink(file.path)
+        data = Validation.query.all()
+        data = generation.createValidationsData(data)
+        data.to_csv(os.path.join(application.config['UPLOAD_PATH'], 'validations.csv'), header = ['id', 'user_id', 'câu hỏi', 'câu trả lời', 'phản hồi', 'ngày đánh giá', 'rate'], index = False)
+        return send_from_directory(directory = application.config['UPLOAD_PATH'], filename = 'validations.csv'), 200
+    except:
+        return jsonify(code = 403, question = 'Can not extract to CSV file!!!'), 403
 
 if __name__ == "__main__":
     application.run(debug = True, host = '0.0.0.0')

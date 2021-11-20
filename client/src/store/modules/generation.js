@@ -1,10 +1,11 @@
-import {create} from "../../api/generate-data";
+import {create, extractToCsv} from "../../api/generate-data";
 
 export default {
     namespaced: true,
     state: {
         data: null,
         errors: null,
+        extractData: null
     },
     mutations: {
         /**
@@ -31,6 +32,15 @@ export default {
          */
         setErrors(state, errors) {
             state.errors = errors.response.data;
+        },
+
+        /**
+         *
+         * @param state
+         * @param data
+         */
+        setExtractData(state, data) {
+            state.extractData = data
         }
     },
     actions: {
@@ -53,5 +63,23 @@ export default {
             }
         },
 
+        /**
+         *
+         * @param commit
+         * @param dispatch
+         * @param files
+         * @returns {Promise<void>}
+         */
+        async extractToCsv({commit, dispatch}) {
+            dispatch('startLoading', null, {root: true});
+            try {
+                const {data} = await extractToCsv();
+                commit('setExtractData', data);
+            } catch (errors) {
+                commit('setErrors', errors);
+            } finally {
+                dispatch('stopLoading', null, {root: true});
+            }
+        },
     },
 }

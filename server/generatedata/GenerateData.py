@@ -33,8 +33,8 @@ class GenerateData():
         return danhSachCauTraLoi
 
     def taoDanhSachCauHoiVaTraLoi(self, dataCauHoi, noiDungCauTraLoi, noiDungChinh):
-        dataCauHoi = self.loaiBoXuongDong(dataCauHoi)
-        danhSachCauHoi = self.taoCauHoiTuTapDuLieu(dataCauHoi, noiDungChinh)
+        dataCauHoi        = self.loaiBoXuongDong(dataCauHoi)
+        danhSachCauHoi    = self.taoCauHoiTuTapDuLieu(dataCauHoi, noiDungChinh)
         danhSachCauTraLoi = self.taoDanhSachCauTraLoi(dataCauHoi, noiDungCauTraLoi)
         return danhSachCauHoi, danhSachCauTraLoi
 
@@ -50,5 +50,34 @@ class GenerateData():
                 danhSachCauTraLoi.append(lst_CauTraLoi[j])
         df = pd.DataFrame({"Câu hỏi": danhSachCauHoi, "Câu trả lời": danhSachCauTraLoi})
         return df
+
+    def createValidationsData(self, data):
+        id            = []
+        user_id       = []
+        question      = []
+        answer        = []
+        feedback      = []
+        validate_date = []
+        rank          = []
+        for i in data:
+            id.append(i.id)
+            user_id.append(i.user_id)
+            question.append(i.question)
+            answer.append(i.answer)
+            feedback.append(i.feedback)
+            validate_date.append(i.validate_date)
+            rank.append(i.rank)
+
+        df = pd.DataFrame({
+                            "Id": id,
+                            "User Id": user_id,
+                            "Câu hỏi": question,
+                            "Câu trả lời": answer,
+                            "Phản hồi": feedback,
+                            "Ngày đánh giá": validate_date,
+                            "Xếp hạng": rank,
+                          })
+        return df
+
     def test(self):
         return "2"
