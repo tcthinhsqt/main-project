@@ -299,7 +299,7 @@ def statistic():
 
         return jsonify(totalUse = totalUse, averageRate = averageRate, rate = rate)
     except:
-        return jsonify(code = 403, question = 'Failed!!!'), 403
+        return jsonify(code = 403, question = 'Không thể thống kê!'), 403
 
 @application.route('/api/generate-data', methods=['POST'])
 @application.errorhandler(Exception)
