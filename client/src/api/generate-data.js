@@ -8,9 +8,8 @@ export const create = (data) => api.post(`generate-data`, data, {
     responseType: "blob",
 });
 
-export const extractToCsv = () => api.get(`validation-to-csv`, {
+export const extractToCsv = () => api.post(`validation-to-csv`, null, {
     headers: {
-        'Content-Type': 'multipart/form-data',
         'Content-Encoding': 'UTF-8',
     },
     responseType: "blob",

@@ -46,7 +46,17 @@ export default {
       chartdata: null,
       options: {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              min: 0,
+              stepSize: 1,
+              reverse: false,
+              beginAtZero: true
+            }
+          }],
+        },
       },
       loaded: false,
     }

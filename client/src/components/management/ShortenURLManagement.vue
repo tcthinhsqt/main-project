@@ -127,6 +127,7 @@ export default {
         link.setAttribute('download', 'validations.csv');
         document.body.appendChild(link);
         link.click();
+        link.remove();
       } else {
         alert('Không thể xuất ra file CSV!!!');
       }

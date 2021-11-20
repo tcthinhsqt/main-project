@@ -418,14 +418,14 @@ def deleteValidation():
 #     except:
 #         return jsonify(code = 404, question = 'Not found!!!'), 404
 
-@application.route('/api/validation-to-csv', methods=['GET'])
+@application.route('/api/validation-to-csv', methods=['POST'])
 @application.errorhandler(Exception)
 def validationToCsv():
     try:
         for file in os.scandir(application.config['UPLOAD_PATH']):
             os.unlink(file.path)
-        data = Validation.query.all()
-        data = generation.createValidationsData(data)
+        validations = Validation.query.all()
+        data = generation.createValidationsData(validations)
         data.to_csv(os.path.join(application.config['UPLOAD_PATH'], 'validations.csv'), header = ['id', 'user_id', 'câu hỏi', 'câu trả lời', 'phản hồi', 'ngày đánh giá', 'rate'], index = False)
         return send_from_directory(directory = application.config['UPLOAD_PATH'], filename = 'validations.csv'), 200
     except:
