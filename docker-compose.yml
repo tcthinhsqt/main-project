@@ -68,6 +68,7 @@ services:
   node:
     container_name: 'main-project-node'
     image: node:lts-alpine
+    restart: always
     volumes:
       - ./client:/client
       - ./client/node_modules:/client/node_modules
