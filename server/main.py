@@ -252,6 +252,7 @@ def question():
         return answer, question
     try:
         question = str(request.get_json(silent=True)).strip()
+
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future           = executor.submit(do_work, question)
             answer, question = future.result()
@@ -267,10 +268,9 @@ def question():
 
                 db.session.commit()
 
-
-            return jsonify(answer = answer, question = question)
+        return jsonify(answer = answer, question = question)
     except:
-        return jsonify(code = 403, question = 'The question was wrong!!!'), 403
+        return jsonify(code = 403, question = 'Câu hỏi của bạn không phù hợp. Vui lòng đặt câu hỏi khác phù hợp hơn.'), 403
 
 @application.route('/api/statistic', methods=['GET'])
 @application.errorhandler(Exception)
@@ -299,7 +299,7 @@ def statistic():
 
         return jsonify(totalUse = totalUse, averageRate = averageRate, rate = rate)
     except:
-        return jsonify(code = 403, question = 'Failed!!!'), 403
+        return jsonify(code = 403, question = 'Không thể thống kê!'), 403
 
 @application.route('/api/generate-data', methods=['POST'])
 @application.errorhandler(Exception)
