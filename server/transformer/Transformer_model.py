@@ -27,17 +27,17 @@ class Transformer_model():
         # self.answer_embedding_matrix = Loadfile_Picker(
         #     'Trained/Vocab/').load_answer_embedding_matrix('answer_embedding_matrix')
 
-        self.batch_size = 50
+        self.batch_size = 64
         self.units = 1024
-        self.embedding_dim = 300
-        self.max_words_question = 58
-        self.max_words_answer = 247
+        self.embedding_dim = 256
+        self.max_words_question = 56
+        self.max_words_answer = 908
 
         self.num_layers = 4
-        self.d_model = 300
+        self.d_model = 256
         self.dff = 512
-        self.num_heads = 5
-        self.dropout_rate = 0.1
+        self.num_heads = 8
+        self.dropout_rate = 0.05
         self.pe_input = 1000
         self.pe_target = 1000
 

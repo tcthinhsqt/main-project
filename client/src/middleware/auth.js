@@ -14,6 +14,7 @@ export default function auth({next, store}) {
         }
 
         if (Math.floor(today / 1000) < currentTime) {
+            store.commit('auth/setUser', null, {root: true});
             throw 'Token has expired!';
         }
 
