@@ -252,6 +252,7 @@ def question():
         return answer, question
     try:
         question = str(request.get_json(silent=True)).strip()
+
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future           = executor.submit(do_work, question)
             answer, question = future.result()
@@ -267,8 +268,7 @@ def question():
 
                 db.session.commit()
 
-
-            return jsonify(answer = answer, question = question)
+        return jsonify(answer = answer, question = question)
     except:
         return jsonify(code = 403, question = 'Câu hỏi của bạn không phù hợp. Vui lòng đặt câu hỏi khác phù hợp hơn.'), 403
 
