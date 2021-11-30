@@ -385,6 +385,47 @@ class Transformer_model():
         text = ' '.join(text.split())
         return text
 
+    def sliceIndex(self, x):
+        i = 0
+        for c in x:
+            if c.isalpha():
+                i = i + 1
+                return i
+            i = i + 1
+
+    def upperFirst(self, x):
+        i = self.sliceIndex(x)
+        return x[:i].upper() + x[i:]
+
+    def isHaveOtherCharacter(self, x):
+        for c in x.split('.')[0]:
+            if c.isdigit() == False:
+                if c.isalpha() & (len(c.strip()) < 1):
+                    return False
+                return True
+        return False
+
+    def addDownLineBeforeListing(self, sentence):
+        if self.isHaveOtherCharacter(sentence):
+            return sentence
+        return '\n' + sentence
+
+    def processing_output(self, sentence):
+        punctuationUpper    = ['.', '?', ':', '!']
+        punctuationLower    = [';']
+        punctuationDownLine = ['-', '+', '*']
+
+        for i in punctuationUpper:
+            sentence = ('{} '.format(i)).join([self.upperFirst(i.strip()) if len(i.strip()) > 1 else i.strip() for i in sentence.split(i)])
+        for i in punctuationLower:
+            sentence = ('{} '.format(i)).join([i.strip() for i in sentence.split(i)])
+        for i in punctuationDownLine:
+            sentence = ('\n{} '.format(i)).join([self.upperFirst(i.strip()) for i in sentence.split(i)])
+
+        sentence = ' '.join([self.addDownLineBeforeListing(i.strip()) if '.' in i and len(i.strip()) <= 3 else i.strip() for i in sentence.split(' ')])
+
+        return sentence.strip()
+
     def evaluate(self, input_sentence, max_length=247):
         # Load các từ điển
         teencode_dictionary     = self.taoTuDienTeenCode('./static/teencode/teencode.csv')
@@ -438,21 +479,12 @@ class Transformer_model():
             # as its input.
             output = tf.concat([output, predicted_id], axis=-1)
 
-        result = result.split()
-        result2 = ''
-        punctuation = ['.', ')', '-']
+        result = self.processing_output(result)
 
+#         result = result.split(' ')
+#         result = ' '.join(result)
 
-        for i, word in enumerate(result):
-            if word == '-':
-                result2 += '\n' + word + ' '
-            else:
-                if (word.isnumeric() or (word>='a' and word<='z' and (len(word)==1))) and (result[i+1] in punctuation):
-                    result2 += '\n' + word + ' '
-                else:
-                    result2 += word + ' '
-
-        return result2.strip(), input_sentence
+        return result, input_sentence
 
     def answering(self, sentence):
         result, sentence = self.evaluate(sentence)
