@@ -114,7 +114,7 @@ export default {
     },
     async submitCreateShortenUrl() {
       this.resetErrors();
-      await this.createAnswer({cauHoi: this.question, id: this.user ? this.user.id : null});
+      await this.createAnswer({cauHoi: this.question, id: this.user ? this.user.id : 0});
       if (this.errors === null) {
         this.isShowResult = true;
         this.isDisableShortenBtn = true;
