@@ -8,6 +8,6 @@ import {trimEnd} from 'lodash';
 
 export default {
     internal: {
-        baseUrl: trimEnd('http://localhost:5000', '/'),
+        baseUrl: trimEnd('http://3.18.101.29:5000', '/'),
     },
 };
