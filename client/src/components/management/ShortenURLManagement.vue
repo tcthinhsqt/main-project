@@ -34,50 +34,14 @@
             </div>
           </div>
         </div>
-        <ShortenURLTable :data="validations.results" :header="header" :fieldNotUse="fieldNotUse"/>
-        <nav aria-label="Page navigation example" class="d-flex justify-content-end mt-2 mr-2">
-          <ul class="pagination">
-            <li class="page-item" :class="{disabled: isDisabledFirst}">
-              <a type="button" class="page-link"
-                 @click.prevent="getValidationListData(validations.first.start, validations.first.limit)">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">First</span>
-              </a>
-            </li>
-            <li class="page-item" :class="{disabled: isDisabledFirst}">
-              <a type="button" class="page-link"
-                 @click.prevent="getValidationListData(validations.previous.start, validations.previous.limit)">
-                <span aria-hidden="true">&lsaquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            <li v-for="page in validations.total_page" class="page-item" :key="page"
-                :class="{active: page===validations.current_page}"
-                v-if="Math.abs(validations.current_page - page)<5
-                || (page < 10 && validations.current_page < 6)
-                || (page > validations.total_page - 9 && validations.current_page > validations.total_page - 5)"
-            >
-              <a type="button" class="page-link"
-                 @click.prevent="getValidationListData(((page-1)*validations.limit) + 1, validations.limit)"
-                 :class="{disabled: page===validations.current_page}"
-              >{{ page }}</a>
-            </li>
-            <li class="page-item" :class="{disabled: isDisabledLast}">
-              <a type="button" class="page-link"
-                 @click.prevent="getValidationListData(validations.next.start, validations.next.limit)">
-                <span aria-hidden="true">&rsaquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-            <li class="page-item" :class="{disabled: isDisabledLast}">
-              <a type="button" class="page-link"
-                 @click.prevent="getValidationListData(validations.last.start, validations.last.limit)">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Last</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+        <ShortenURLTable :data="validations.results"
+                         :header="header"
+                         :fieldNotUse="fieldNotUse"
+                         @get-data="getValidationListData"/>
+        <ShortenURLPagination :pagination="validations"
+                              @change-page="getValidationListData"
+                              v-if="validations.total_page > 1"
+        />
       </div>
     </div>
   </div>
@@ -86,16 +50,14 @@
 <script>
 import ShortenURLTable from "../elements/ShortenURLTable";
 import {mapActions, mapMutations, mapState} from "vuex";
+import ShortenURLPagination from "../elements/ShortenURLPagination";
 
 export default {
   name: "ShortenURLManagement",
-  components: {ShortenURLTable},
+  components: {ShortenURLPagination, ShortenURLTable},
   data() {
     return {
-      header: ['Câu trả lời', 'Phản hồi', 'Câu hỏi', 'Đánh giá', 'Mã người dùng', 'Người dùng', 'Ngày đánh giá', ''],
-      fieldNotUse: ['id'],
-      isDisabledFirst: false,
-      isDisabledLast: false,
+      header: ['Câu trả lời', 'Phản hồi', 'Id', 'Câu hỏi', 'Đánh giá', 'Mã người dùng', 'Người dùng', 'Ngày đánh giá', ''],
       // searchData: 0,
     }
   },
@@ -105,11 +67,9 @@ export default {
   methods: {
     ...mapMutations('validation', ['resetErrors']),
     ...mapActions('validation', ['getFeedbacksData']),
-    async getValidationListData(start, limit) {
+    async getValidationListData(start, limit = 10) {
       this.resetErrors();
       await this.getFeedbacksData({start: start, limit: limit});
-      this.isDisabledFirst = this.validations.current_page <= 1;
-      this.isDisabledLast = this.validations.current_page >= this.validations.total_page;
       if (this.errors) {
         alert('Failed get validations!!!');
       }
@@ -141,7 +101,7 @@ export default {
     // },
   },
   created() {
-    this.getValidationListData(1, 5);
+    this.getValidationListData(1);
   }
 }
 </script>

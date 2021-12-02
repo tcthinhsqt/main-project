@@ -8,7 +8,7 @@
       </thead>
       <tbody>
       <tr v-for="item in data" :key="item.id">
-        <td v-for="(value, key) in item" :key="key" v-if="!fieldNotUse.includes(key)" class="column"
+        <td v-for="(value, key) in item" :key="key" class="column"
             data-toggle="tooltip"
             data-placement="top"
             :title="value"
@@ -58,7 +58,7 @@ export default {
     async deleteItem(id) {
       await this.deleteFeedback({id: id});
       if (!this.errors) {
-        await this.$store.dispatch('validation/getFeedbacksData', {start: 1, limit: 5}, {root: true});
+        this.$emit('get-data', 1);
         alert('Xóa thành công!!!');
       } else {
         alert('Xóa thất bại!!!');

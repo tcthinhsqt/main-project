@@ -336,7 +336,7 @@ def getValidations():
     try:
         data       = Validation.query.all()
         start      =request.args.get('start', 1)
-        limit      =request.args.get('limit', 5)
+        limit      =request.args.get('limit', 10)
         url        = "/get-validations"
 
         start = int(start)
@@ -350,9 +350,9 @@ def getValidations():
         obj['limit']        = limit
         obj['count']        = count
         obj['total_page']   = count//limit + (1 if count % limit > 0 else 0)
-        obj['current_page'] = start//limit + (1 if count % limit > 0 else 0)
+        obj['current_page'] = start//limit + (1 if start % limit > 0 else 0)
         obj['first']        = {'start': 1, 'limit': limit}
-        obj['last']         = {'start': (count//limit)*limit + 1, 'limit': limit}
+        obj['last']         = {'start': ((obj['total_page'] - 1)*limit + 1) , 'limit': limit}
         # make URLs
         # make previous url
         if start == 1:
