@@ -36,7 +36,6 @@
         </div>
         <ShortenURLTable :data="validations.results"
                          :header="header"
-                         :fieldNotUse="fieldNotUse"
                          @get-data="getValidationListData"/>
         <ShortenURLPagination :pagination="validations"
                               @change-page="getValidationListData"
