@@ -18,31 +18,30 @@ class Transformer_model():
     def __init__(self):
         super(Transformer_model, self).__init__()
         self.word2id_question = LoadPickleFile('trained/vocab/').load_word2id('word2id_question')
-        self.word2id_answer = LoadPickleFile('trained/vocab/').load_word2id('word2id_answer')
+        self.word2id_answer   = LoadPickleFile('trained/vocab/').load_word2id('word2id_answer')
         self.id2word_question = LoadPickleFile('trained/vocab/').load_word2id('id2word_question')
-        self.id2word_answer = LoadPickleFile('trained/vocab/').load_word2id('id2word_answer')
+        self.id2word_answer   = LoadPickleFile('trained/vocab/').load_word2id('id2word_answer')
 
         # self.question_embedding_matrix = Loadfile_Picker(
         #     'Trained/Vocab/').load_question_embedding_matrix('question_embedding_matrix')
         # self.answer_embedding_matrix = Loadfile_Picker(
         #     'Trained/Vocab/').load_answer_embedding_matrix('answer_embedding_matrix')
 
-        self.batch_size = 64
-        self.units = 1024
-        self.embedding_dim = 256
+        self.batch_size         = 64
+        self.units              = 1024
+        self.embedding_dim      = 256
         self.max_words_question = 56
-        self.max_words_answer = 908
+        self.max_words_answer   = 908
+        self.num_layers         = 4
+        self.d_model            = 256
+        self.dff                = 512
+        self.num_heads          = 8
+        self.dropout_rate       = 0.05
+        self.pe_input           = 1000
+        self.pe_target          = 1000
 
-        self.num_layers = 4
-        self.d_model = 256
-        self.dff = 512
-        self.num_heads = 8
-        self.dropout_rate = 0.05
-        self.pe_input = 1000
-        self.pe_target = 1000
 
-
-        self.input_vocab_size = len(self.word2id_question)
+        self.input_vocab_size  = len(self.word2id_question)
         self.target_vocab_size = len(self.word2id_answer)
 
         self.transformer = Transformer(self.num_layers, self.d_model, self.num_heads, self.dff, self.input_vocab_size,
@@ -437,9 +436,20 @@ class Transformer_model():
 
         # inp sentence is portuguese, hence adding the start and end token
         sentence = self.word_processing_question(sentence)
+        new_sentence = []
+        for i in sentence:
+            if i in self.word2id_question:
+                new_sentence.append(i)
+        if len(new_sentence) < 1:
+            raise Exception()
         sentence = self.preprocess_sentence(sentence)
         inputs   = self.padding(sentence, self.max_words_question)
-        inputs   = [[self.word2id_question[i] for i in inputs]]
+        new_inputs = []
+        for i in inputs:
+            if i in self.word2id_question:
+                new_inputs.append(self.word2id_question[i])
+
+        inputs   = [[i for i in new_inputs]]
 
         inputs = tf.convert_to_tensor(inputs)
 
