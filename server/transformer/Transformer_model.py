@@ -442,12 +442,11 @@ class Transformer_model():
                 new_sentence.append(i)
         if len(new_sentence) < 1:
             raise Exception()
-        sentence = self.preprocess_sentence(sentence)
+        sentence = self.preprocess_sentence(new_sentence)
         inputs   = self.padding(sentence, self.max_words_question)
         new_inputs = []
         for i in inputs:
-            if i in self.word2id_question:
-                new_inputs.append(self.word2id_question[i])
+            new_inputs.append(self.word2id_question[i])
 
         inputs   = [[i for i in new_inputs]]
 
