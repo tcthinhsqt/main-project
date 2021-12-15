@@ -201,13 +201,10 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="bi bi-building"></i></span>
                       </div>
-                      <input class="form-control"
-                             placeholder="Khoa"
-                             type="text"
-                             :class="{'is-invalid': errors[0]}"
-                             v-model="userDataForm.faculty"
-                             autocomplete="off"
-                      >
+                          <select id="input-faculty" class="form-control" v-model="userDataForm.faculty"
+                                  :class="{'is-invalid': errors[0]}">
+                            <option v-for="(value, index) in facultys" :key="index" :value="value">{{ value }}</option>
+                          </select>
                     </div>
                     <div class="input-group invalid-feedback">
                       {{ errors[0] }}
@@ -305,6 +302,25 @@ export default {
         degree: ""
       },
       isAgree: false,
+      facultys: [
+        'Khoa Công nghệ Cơ khí',
+        'Khoa Công nghệ Thông tin',
+        'Khoa Công nghệ Điện',
+        'Khoa Công nghệ Điện tử',
+        'Khoa Công nghệ Động lực',
+        'Khoa Công nghệ Nhiệt lạnh',
+        'Khoa Công nghệ may - Thời trang',
+        'Khoa Công nghệ Hóa học',
+        'Khoa Kế toán - Kiểm toán',
+        'Khoa Khoa học cơ bản',
+        'Khoa Lý luận Chính trị',
+        'Khoa Ngoại ngữ',
+        'Khoa Quản trị Kinh doanh',
+        'Khoa Tài chính - Ngân hàng',
+        'Khoa Thương mại - Du lịch',
+        'Khoa Kỹ thuật - Xây dựng',
+        'Khoa Luật',
+      ],
     }
   },
   computed: mapState('auth', ['responseErrors']),
